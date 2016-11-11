@@ -1,0 +1,128 @@
+###############################################################################
+#                                                                             #
+#              Database for LairdTech PR-59 RS-232 serial device              #
+#                                                                             #
+###############################################################################
+
+#
+# These are not the right PVs and not tested, used only for stubs!!!!
+#
+
+# get id string
+record(waveform, "$(P)$(R)IDN")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString(*idn,199) $(PORT) 0")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "200")
+}
+
+# set/get current position
+record(longout, "$(P)$(R)POS")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD(pos) $(PORT) 0")
+}
+record(longin, "$(P)$(R)POS_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD(pos) $(PORT) 0")
+    field(PINI, "YES")
+}
+
+# set/get number of positions on the wheel
+record(mbbo, "$(P)$(R)PCOUNT")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD(pcount) $(PORT) 0")
+	field(SXST, "6")
+	field(SXVL, "6")
+	field(TVST, "12")
+	field(TVVL, "12")
+}
+record(mbbi, "$(P)$(R)PCOUNT_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD(pcount) $(PORT) 0")
+	field(SXST, "6")
+	field(SXVL, "6")
+	field(TVST, "12")
+	field(TVVL, "12")
+    field(PINI, "YES")
+}
+
+# set/get trigger mode
+record(bo, "$(P)$(R)TRIG")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD(trig) $(PORT) 0")
+    field(ZNAM, "Input")
+    field(ONAM, "Output")
+}
+record(bi, "$(P)$(R)TRIG_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD(trig) $(PORT) 0")
+    field(ZNAM, "Input")
+    field(ONAM, "Output")
+    field(PINI, "YES")
+}
+
+# set/get speed mode
+record(bo, "$(P)$(R)SPEED")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD(speed) $(PORT) 0")
+    field(ZNAM, "Slow")
+    field(ONAM, "Fast")
+}
+record(bi, "$(P)$(R)SPEED_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD(speed) $(PORT) 0")
+    field(ZNAM, "Slow")
+    field(ONAM, "Fast")
+    field(PINI, "YES")
+}
+
+# set/get sensor state when wheel is idle 
+record(bo, "$(P)$(R)SENSORS")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD(sensors) $(PORT) 0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+record(bi, "$(P)$(R)SENSORS_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD(sensors) $(PORT) 0")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(PINI, "YES")
+}
+
+# set/get serial baud rate
+record(bo, "$(P)$(R)BAUD")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD(baud) $(PORT) 0")
+    field(ZNAM, "9600")
+    field(ONAM, "115200")
+}
+record(bi, "$(P)$(R)BAUD_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD(baud) $(PORT) 0")
+    field(ZNAM, "9600")
+    field(ONAM, "115200")
+    field(PINI, "YES")
+}
+
+# save the settings as defaults (saved across power cycle)
+record(bo, "$(P)$(R)SAVE")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto cmd(save) $(PORT) 0")
+}

@@ -1,0 +1,58 @@
+#
+# Example prototype entries for LairdTech PR-59 devices
+#
+
+#
+# Disconnect (and likely auto-reconnect) whenever anything goes wrong.
+#
+@mismatch     { disconnect; }
+@writetimeout { disconnect; }
+@readtimeout  { disconnect; }
+@replyTimeout { disconnect; }
+
+#
+# This is mandatory in order to get responses from the device
+#
+Terminator = CR;
+
+#
+# NOTE: Each read returns the sent query string, too. This is why the
+#       input commands need to handle multi line input from the device. 
+#
+
+#
+# Get a string value, size is passed as second argument
+#
+getString {
+    out "\$1?";
+    in "\$1?";
+    in "%\$2[^\r\n]";
+    ExtraInput = Ignore;
+}
+
+#
+# Send a command
+#
+cmd {
+    out "\$1";
+}
+
+#
+# Get an integer (decimal) value
+#
+getD {
+    out "\$1?";
+    in "\$1?";
+    in "%d";
+    ExtraInput = Ignore;
+}
+
+#
+# Set an integer (decimal) value
+# Read back initial value on startup
+#
+setD {
+    @init { out "\$1?"; in "\$1?"; in "%d"; }
+    out "\$1=%d";
+    ExtraInput = Ignore;
+}
