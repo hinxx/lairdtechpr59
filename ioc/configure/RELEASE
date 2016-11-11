@@ -1,0 +1,13 @@
+# Common prefixes
+SUPPORT=${MY_EPICS_SUPPORT}
+EXTENSIONS=${MY_EPICS_EXTENSIONS}
+-include $(TOP)/../configure/SUPPORT.$(EPICS_HOST_ARCH)
+
+# Module definitions
+ASYN=$(SUPPORT)/asyn4-30
+AUTOSAVE=$(SUPPORT)/autosave-R5-7-1
+STREAMDEVICE=$(EXTENSIONS)/src/m-epics-streamdevice
+LAIRDTECHPR59=$(TOP)/..
+
+# EPICS Base appears last
+EPICS_BASE=${MY_EPICS_BASE}
