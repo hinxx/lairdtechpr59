@@ -10,3 +10,5 @@ USR_DEPENDENCIES += asyn
 USR_CXXFLAGS += -fno-operator-names
 
 SOURCES =
+
+STARTUPS = startup/lairdtechPR59.cmd
