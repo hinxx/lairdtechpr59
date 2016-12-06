@@ -13,8 +13,10 @@
 #
 # This is mandatory in order to get responses from the device
 #
-Terminator = CR;
-
+#Terminator = CR;
+#Terminator = CR LF;
+OutTerminator = CR LF;
+InTerminator = "";
 #
 # NOTE: Each read returns the sent query string, too. This is why the
 #       input commands need to handle multi line input from the device. 
@@ -24,9 +26,11 @@ Terminator = CR;
 # Get a string value, size is passed as second argument
 #
 getString {
-    out "\$1?";
-    in "\$1?";
-    in "%\$2[^\r\n]";
+    out "\$1";
+#    in "\$1";
+#    in "?\$1";
+#    in "%\$2[^\r\n]";
+    in "\$1\r\n%\$2[^\r\n]";
     ExtraInput = Ignore;
 }
 
@@ -42,8 +46,8 @@ cmd {
 #
 getD {
     out "\$1?";
-    in "\$1?";
-    in "%d";
+#    in "\$1?\r\n";
+    in "\$1?\r\n%d";
     ExtraInput = Ignore;
 }
 
@@ -52,7 +56,28 @@ getD {
 # Read back initial value on startup
 #
 setD {
-    @init { out "\$1?"; in "\$1?"; in "%d"; }
+#    @init { out "\$1?"; in "\$1?"; in "%d"; }
     out "\$1=%d";
+    in "\$1=%d\r\n%d";
+    ExtraInput = Ignore;
+}
+
+#
+# Get a float value
+#
+getF {
+    out "\$1?";
+    in "\$1?\r\n%f";
+    ExtraInput = Ignore;
+}
+
+#
+# Set a float value
+# Read back initial value on startup
+#
+setF {
+#    @init { out "\$1?"; in "\$1?"; in "%f"; }
+    out "\$1=%f";
+    in "\$1=%f\r\n";
     ExtraInput = Ignore;
 }

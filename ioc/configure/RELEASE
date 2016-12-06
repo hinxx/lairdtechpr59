@@ -6,7 +6,8 @@ EXTENSIONS=${MY_EPICS_EXTENSIONS}
 # Module definitions
 ASYN=$(SUPPORT)/asyn4-30
 AUTOSAVE=$(SUPPORT)/autosave-R5-7-1
-STREAMDEVICE=$(EXTENSIONS)/src/m-epics-streamdevice
+#STREAMDEVICE=$(EXTENSIONS)/src/m-epics-streamdevice
+STREAMDEVICE=$(EXTENSIONS)/src/StreamDevice-stream_2_7_7
 LAIRDTECHPR59=$(TOP)/..
 
 # EPICS Base appears last

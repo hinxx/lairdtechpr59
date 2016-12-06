@@ -1,0 +1,182 @@
+###############################################################################
+#                                                                             #
+#              Database for LairdTech PR-59 RS-232 serial device              #
+#                                                                             #
+#                                    PID                                      #
+#                                                                             #
+###############################################################################
+
+# PID - Kp
+record(ao, "$(P)$(R)PIDKp")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R1) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDKp_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDKp_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R1) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Ki
+record(ao, "$(P)$(R)PIDKi")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R2) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDKi_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDKi_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R2) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Kd
+record(ao, "$(P)$(R)PIDKd")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R3) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDKd_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDKd_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R3) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - KLP_A
+record(ao, "$(P)$(R)PIDKLPa")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R4) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDKLPa_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDKLPa_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R4) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - KLP_B
+record(ao, "$(P)$(R)PIDKLPb")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R5) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDKLPb_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDKLPb_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R5) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - iLim
+record(ao, "$(P)$(R)PIDILim")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R8) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDILim_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDILim_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R8) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Decay
+record(ao, "$(P)$(R)PIDDecay")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R12) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)PIDDecay_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)PIDDecay_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R12) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Ta
+record(ai, "$(P)$(R)PIDTa_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R110) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Te
+record(ai, "$(P)$(R)PIDTe_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R111) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Tp
+record(ai, "$(P)$(R)PIDTp_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R112) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Ti
+record(ai, "$(P)$(R)PIDTi_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R113) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - Td
+record(ai, "$(P)$(R)PIDTd_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R114) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - TLP_A
+record(ai, "$(P)$(R)PIDTLPa_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R117) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# PID - TLP_B
+record(ai, "$(P)$(R)PIDTLPb_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R118) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}

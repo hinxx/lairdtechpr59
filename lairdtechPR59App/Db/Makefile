@@ -11,7 +11,9 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
 #DB += xxx.db
-DB += lairdtechPR59.template
+DB += lairdtechPR59_main.template
+DB += lairdtechPR59_pid.template
+DB += lairdtechPR59_temp.template
 
 DB_INSTALLS += ../lairdtechPR59.proto
 

@@ -1,0 +1,277 @@
+###############################################################################
+#                                                                             #
+#              Database for LairdTech PR-59 RS-232 serial device              #
+#                                                                             #
+#                              MAIN                                           #
+#                                                                             #
+###############################################################################
+
+# get board info and id name
+record(waveform, "$(P)$(R)ID")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($LI,199) $(PORT) 0")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "200")
+}
+
+# get current software version
+record(waveform, "$(P)$(R)SWVersion")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($V,199) $(PORT) 0")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "200")
+}
+
+# get current software version and interface version
+record(waveform, "$(P)$(R)SWIntfVersion")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($v,199) $(PORT) 0")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "200")
+}
+
+# get status flag
+record(waveform, "$(P)$(R)GetStatus")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($S,199) $(PORT) 0")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "200")
+}
+
+# clear status flag
+record(waveform, "$(P)$(R)ClearStatus")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($SC,199) $(PORT) 0")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "200")
+}
+
+# clear RUN flag
+record(waveform, "$(P)$(R)Stop")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($Q,10) $(PORT) 0")
+    field(FTVL, "CHAR")
+    field(NELM, "10")
+}
+
+# set RUN flag
+record(waveform, "$(P)$(R)Start")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getString($W,10) $(PORT) 0")
+    field(FTVL, "CHAR")
+    field(NELM, "10")
+}
+
+# write regulator register values to EEPROM (saved across power cycle)
+record(bo, "$(P)$(R)WriteToEEPROM")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto cmd($RW) $(PORT) 0")
+}
+
+# clear EEPROM to default, and reboot the regulator
+record(bo, "$(P)$(R)ClearEEPROM")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto cmd($RC) $(PORT) 0")
+}
+
+
+# set point; main temperature reference
+record(ao, "$(P)$(R)FgTref")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R0) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)FgTref_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)FgTref_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R0) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# temperature reference read back
+record(ai, "$(P)$(R)Tref_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R105) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# regulator mode
+record(mbbo, "$(P)$(R)RegulatorMode")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setD($R13) $(PORT) 0")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Power")
+    field(ONVL, "1")
+    field(TWST, "Algo")
+    field(TWVL, "2")
+    field(THST, "P")
+    field(THVL, "3")
+    field(FRST, "PI")
+    field(FRVL, "4")
+    field(FVST, "PD")
+    field(FVVL, "5")
+    field(SXST, "PID")
+    field(SXVL, "6")
+    field(FLNK, "$(P)$(R)RegulatorMode_RBV.PROC PP NMS")
+}
+record(mbbi, "$(P)$(R)RegulatorMode_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD($R13) $(PORT) 0")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Power")
+    field(ONVL, "1")
+    field(TWST, "Algo")
+    field(TWVL, "2")
+    field(THST, "P")
+    field(THVL, "3")
+    field(FRST, "PI")
+    field(FRVL, "4")
+    field(FVST, "PD")
+    field(FVVL, "5")
+    field(SXST, "PID")
+    field(SXVL, "6")
+    field(PINI, "YES")
+}
+
+# output value
+record(ai, "$(P)$(R)Tc_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R106) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# limit the Tc signal
+record(ao, "$(P)$(R)TcLimit")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R6) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)TcLimit_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)TcLimit_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R6) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# dead band of Tc signal
+record(ao, "$(P)$(R)TcDeadBand")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R7) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)TcDeadBand_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)TcDeadBand_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R7) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# sample rate (1/Hz)
+record(ai, "$(P)$(R)Ts_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R9) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# gain of cool part of Tc signal
+record(ao, "$(P)$(R)CoolGain")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R10) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)CoolGain_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)CoolGain_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R10) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# gain of heat part of Tc signal
+record(ao, "$(P)$(R)HeatGain")
+{
+    field(DTYP, "stream")
+    field(OUT,  "@lairdtechPR59.proto setF($R11) $(PORT) 0")
+    field(PREC, "6")
+    field(FLNK, "$(P)$(R)HeatGain_RBV.PROC PP NMS")
+}
+record(ai, "$(P)$(R)HeatGain_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R11) $(PORT) 0")
+    field(PREC, "6")
+    field(PINI, "YES")
+}
+
+# regulator event count
+record(longin, "$(P)$(R)EventCount_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getD($R99) $(PORT) 0")
+    field(PINI, "YES")
+}
+
+# input voltage
+record(ai, "$(P)$(R)InputVoltage_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R150) $(PORT) 0")
+    field(PREC, "2")
+    field(EGU,  "V")
+    field(PINI, "YES")
+}
+
+# internal voltage
+record(ai, "$(P)$(R)InternalVoltage_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R151) $(PORT) 0")
+    field(PREC, "2")
+    field(EGU,  "V")
+    field(PINI, "YES")
+}
+
+# main current
+record(ai, "$(P)$(R)MainCurrent_RBV")
+{
+    field(DTYP, "stream")
+    field(INP,  "@lairdtechPR59.proto getF($R152) $(PORT) 0")
+    field(PREC, "2")
+    field(EGU,  "A")
+    field(PINI, "YES")
+}

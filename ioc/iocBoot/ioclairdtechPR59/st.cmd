@@ -7,6 +7,10 @@
 
 epicsEnvSet("STREAM_PROTOCOL_PATH", "$(LAIRDTECHPR59)/db")
 
+
+epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO")
+epicsEnvSet("EPICS_CA_ADDR_LIST", "localhost")
+
 cd "${TOP}"
 
 ## Register all support components
@@ -34,7 +38,9 @@ asynSetTraceIOMask("PR59",0,0xff)
 #asynSetTraceMask("PR59",0,0xff)
 
 # Load record instances
-dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59.template","P=PR59:,R=,PORT=PR59")
+dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_main.template","P=PR59:,R=,PORT=PR59")
+dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_pid.template","P=PR59:,R=,PORT=PR59")
+dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_temp.template","P=PR59:,R=,PORT=PR59")
 dbLoadRecords("$(ASYN)/db/asynRecord.db","P=PR59:,R=asyn,PORT=PR59,ADDR=0,OMAX=100,IMAX=100")
 
 cd "${TOP}/iocBoot/${IOC}"
