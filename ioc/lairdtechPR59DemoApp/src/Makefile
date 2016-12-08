@@ -17,7 +17,6 @@ PROD_IOC = $(PROD_NAME)
 DBD += $(PROD_NAME).dbd
 $(PROD_NAME)_DBD += lairdtechPR59Support.dbd
 $(PROD_NAME)_DBD += base.dbd
-$(PROD_NAME)_DBD += stream.dbd
 $(PROD_NAME)_DBD += drvAsynSerialPort.dbd
 $(PROD_NAME)_DBD += asyn.dbd
 
@@ -25,7 +24,7 @@ $(PROD_NAME)_DBD += asyn.dbd
 PROD_SRCS_DEFAULT += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Main.cpp
 PROD_SRCS_vxWorks += $(PROD_NAME)_registerRecordDeviceDriver.cpp
 
-PROD_LIBS += stream
+PROD_LIBS += lairdtechPR59
 PROD_LIBS += asyn
 
 $(PROD_NAME)_LIBS += $(EPICS_BASE_IOC_LIBS)

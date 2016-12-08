@@ -6,119 +6,283 @@
 #                                                                             #
 ###############################################################################
 
+# asyn record for interactive communication with PR59
+record(asyn, "$(P)$(R)SerialAsyn") {
+    field(PORT,  "$(SERIAL_PORT)")
+    field(IMAX, "256")
+    field(OMAX, "256")
+}
+
+# status message 
+record(waveform, "$(P)$(R)StatusMessage_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_STATUS_MESSAGE")
+    field(FTVL, "CHAR")
+    field(NELM, "512")
+    field(SCAN, "I/O Intr")
+}
+
 # get board info and id name
-record(waveform, "$(P)$(R)ID")
+record(waveform, "$(P)$(R)ID_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($LI,199) $(PORT) 0")
-    field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_ID")
     field(FTVL, "CHAR")
-    field(NELM, "200")
+    field(NELM, "512")
+    field(SCAN, "I/O Intr")
 }
 
-# get current software version
-record(waveform, "$(P)$(R)SWVersion")
+# status flags (alarms and errors)
+record(waveform, "$(P)$(R)Status_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($V,199) $(PORT) 0")
-    field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_STATUS")
     field(FTVL, "CHAR")
-    field(NELM, "200")
+    field(NELM, "512")
+    field(SCAN, "I/O Intr")
 }
 
-# get current software version and interface version
-record(waveform, "$(P)$(R)SWIntfVersion")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($v,199) $(PORT) 0")
-    field(PINI, "YES")
-    field(FTVL, "CHAR")
-    field(NELM, "200")
+##############################################################################
+# status alarm bits
+##############################################################################
+record(bi, "$(P)$(R)StatusAlarmTemp1TooHigh_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x1,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp1TooLow_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x2,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp1Short_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x4,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp1Missing_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x8,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp2TooHigh_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x10,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp2TooLow_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x20,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp2Short_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x40,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp2Missing_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x80,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp3TooHigh_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x100,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp3TooLow_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x200,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp3Short_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x400,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp3Missing_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x800,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp4TooHigh_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x1000,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp4TooLow_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x2000,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp4Short_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x4000,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusAlarmTemp4Missing_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x8000,$(TIMEOUT))LT_STATUS_ALARM")
+    field(ZNAM, "OK")
+    field(ONAM, "ALARM")
+    field(SCAN, "I/O Intr")
 }
 
-# get status flag
-record(waveform, "$(P)$(R)GetStatus")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($S,199) $(PORT) 0")
-    field(PINI, "YES")
-    field(FTVL, "CHAR")
-    field(NELM, "200")
+
+##############################################################################
+# status error bits
+##############################################################################
+record(bi, "$(P)$(R)StatusErrorStartupDelay_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x1,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorDownloadError_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x2,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorCritial_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x4,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorRegulatorOverload_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x8,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorHighVoltage_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x10,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorLowVoltage_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x20,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorHigh12V_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x40,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorLow12V_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x80,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorCurrentHigh_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x100,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorCurrentLow_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x200,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorFan1High_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x400,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorFan1Low_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x800,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorFan2High_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x1000,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorFan2Low_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x2000,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorSensorAlarmStop_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x4000,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
+}
+record(bi, "$(P)$(R)StatusErrorSensorAlarmIndicator_RBV") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x8000,$(TIMEOUT))LT_STATUS_ERROR")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(SCAN, "I/O Intr")
 }
 
-# clear status flag
-record(waveform, "$(P)$(R)ClearStatus")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($SC,199) $(PORT) 0")
-    field(PINI, "YES")
-    field(FTVL, "CHAR")
-    field(NELM, "200")
-}
-
-# clear RUN flag
-record(waveform, "$(P)$(R)Stop")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($Q,10) $(PORT) 0")
-    field(FTVL, "CHAR")
-    field(NELM, "10")
-}
-
-# set RUN flag
-record(waveform, "$(P)$(R)Start")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getString($W,10) $(PORT) 0")
-    field(FTVL, "CHAR")
-    field(NELM, "10")
-}
-
-# write regulator register values to EEPROM (saved across power cycle)
-record(bo, "$(P)$(R)WriteToEEPROM")
-{
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto cmd($RW) $(PORT) 0")
-}
-
-# clear EEPROM to default, and reboot the regulator
-record(bo, "$(P)$(R)ClearEEPROM")
-{
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto cmd($RC) $(PORT) 0")
-}
-
-
-# set point; main temperature reference
-record(ao, "$(P)$(R)FgTref")
-{
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R0) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)FgTref_RBV.PROC PP NMS")
-}
-record(ai, "$(P)$(R)FgTref_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R0) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
-}
-
-# temperature reference read back
-record(ai, "$(P)$(R)Tref_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R105) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
-}
-
+##############################################################################
 # regulator mode
+##############################################################################
 record(mbbo, "$(P)$(R)RegulatorMode")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setD($R13) $(PORT) 0")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_REGULATOR_MODE")
     field(ZRST, "Off")
     field(ZRVL, "0")
     field(ONST, "Power")
@@ -133,12 +297,11 @@ record(mbbo, "$(P)$(R)RegulatorMode")
     field(FVVL, "5")
     field(SXST, "PID")
     field(SXVL, "6")
-    field(FLNK, "$(P)$(R)RegulatorMode_RBV.PROC PP NMS")
 }
 record(mbbi, "$(P)$(R)RegulatorMode_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getD($R13) $(PORT) 0")
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_REGULATOR_MODE")
     field(ZRST, "Off")
     field(ZRVL, "0")
     field(ONST, "Power")
@@ -153,125 +316,330 @@ record(mbbi, "$(P)$(R)RegulatorMode_RBV")
     field(FVVL, "5")
     field(SXST, "PID")
     field(SXVL, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
+}
+record(mbbo, "$(P)$(R)RegulatorModeFlags")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0x3F0,$(TIMEOUT))LT_REGULATOR_MODE_FLAGS")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "TrExtSelect")
+    field(ONVL, "1")
+    field(TWST, "TcPowerInt")
+    field(TWVL, "2")
+    field(THST, "SendParams")
+    field(THVL, "4")
+    field(FRST, "Autostart")
+    field(FRVL, "8")
+    field(FVST, "LoopMode")
+    field(FVVL, "16")
+    field(SXST, "InvertOutput")
+    field(SXVL, "32")
+}
+record(mbbi, "$(P)$(R)RegulatorModeFlags_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x3F0,$(TIMEOUT))LT_REGULATOR_MODE_FLAGS")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "TrExtSelect")
+    field(ONVL, "1")
+    field(TWST, "TcPowerInt")
+    field(TWVL, "2")
+    field(THST, "SendParams")
+    field(THVL, "4")
+    field(FRST, "Autostart")
+    field(FRVL, "8")
+    field(FVST, "LoopMode")
+    field(FVVL, "16")
+    field(SXST, "InvertOutput")
+    field(SXVL, "32")
+    field(SCAN, "I/O Intr")
+}
+record(mbbo, "$(P)$(R)RegulatorFilterA")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0x3000,$(TIMEOUT))LT_REGULATOR_FILTER_A")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+}
+record(mbbi, "$(P)$(R)RegulatorFilterA_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x3000,$(TIMEOUT))LT_REGULATOR_FILTER_A")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+    field(SCAN, "I/O Intr")
+}
+record(mbbo, "$(P)$(R)RegulatorFilterB")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0xC000,$(TIMEOUT))LT_REGULATOR_FILTER_B")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+}
+record(mbbi, "$(P)$(R)RegulatorFilterB_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0xC000,$(TIMEOUT))LT_REGULATOR_FILTER_B")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+    field(SCAN, "I/O Intr")
 }
 
-# output value
-record(ai, "$(P)$(R)Tc_RBV")
+
+
+##############################################################################
+# temperature sensor mode
+##############################################################################
+record(mbbo, "$(P)$(R)Temp1Mode")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R106) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_TEMP_1_MODE")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "VrefPlus")
+    field(ONVL, "1")
+    field(TWST, "VrefMinus")
+    field(TWVL, "2")
+    field(THST, "Steinhart")
+    field(THVL, "4")
+    field(FRST, "Zoom")
+    field(FRVL, "8")
+    field(FVST, "Steinhart+Zoom")
+    field(FVVL, "12")
+}
+record(mbbi, "$(P)$(R)Temp1Mode_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_TEMP_1_MODE")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "VrefPlus")
+    field(ONVL, "1")
+    field(TWST, "VrefMinus")
+    field(TWVL, "2")
+    field(THST, "Steinhart")
+    field(THVL, "4")
+    field(FRST, "Zoom")
+    field(FRVL, "8")
+    field(FVST, "Steinhart+Zoom")
+    field(FVVL, "12")
+    field(SCAN, "I/O Intr")
 }
 
-# limit the Tc signal
-record(ao, "$(P)$(R)TcLimit")
+
+##############################################################################
+# continouos logging
+##############################################################################
+record(mbbo, "$(P)$(R)ContinouosLog")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R6) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)TcLimit_RBV.PROC PP NMS")
-}
-record(ai, "$(P)$(R)TcLimit_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R6) $(PORT) 0")
-    field(PREC, "6")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "A/D values")
+    field(ONVL, "1")
+    field(TWST, "Global values")
+    field(TWVL, "2")
+    field(THST, "PID values")
+    field(THVL, "3")
+    field(FRST, "Temp. values")
+    field(FRVL, "4")
+    field(FVST, "Regulator input")
+    field(FVVL, "5")
+    field(SXST, "Runtime data")
+    field(SXVL, "6")
+    field(SVST, "Runtime IEEE754")
+    field(SVVL, "7")
+    field(EIST, "Runtime LOGG")
+    field(EIVL, "8")
+    field(VAL,  "0")
     field(PINI, "YES")
 }
-
-# dead band of Tc signal
-record(ao, "$(P)$(R)TcDeadBand")
+record(mbbi, "$(P)$(R)ContinouosLog_RBV")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R7) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)TcDeadBand_RBV.PROC PP NMS")
-}
-record(ai, "$(P)$(R)TcDeadBand_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R7) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
-}
-
-# sample rate (1/Hz)
-record(ai, "$(P)$(R)Ts_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R9) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "A/D values")
+    field(ONVL, "1")
+    field(TWST, "Global values")
+    field(TWVL, "2")
+    field(THST, "PID values")
+    field(THVL, "3")
+    field(FRST, "Temp. values")
+    field(FRVL, "4")
+    field(FVST, "Regulator input")
+    field(FVVL, "5")
+    field(SXST, "Runtime data")
+    field(SXVL, "6")
+    field(SVST, "Runtime IEEE754")
+    field(SVVL, "7")
+    field(EIST, "Runtime LOGG")
+    field(EIVL, "8")
 }
 
-# gain of cool part of Tc signal
-record(ao, "$(P)$(R)CoolGain")
+
+
+
+
+
+##############################################################################
+# regulator parameters
+##############################################################################
+
+record(ao, "$(P)$(R)SetPoint")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R10) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)CoolGain_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_SET_POINT_TR")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)CoolGain_RBV")
+record(ai, "$(P)$(R)SetPoint_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R10) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_SET_POINT_TR")
+    field(SCAN, "I/O Intr")
 }
 
-# gain of heat part of Tc signal
-record(ao, "$(P)$(R)HeatGain")
+##############################################################################
+# monitoring analog inputs
+##############################################################################
+# register 100
+record(ai, "$(P)$(R)Temp1_RBV")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R11) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)HeatGain_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_1")
+    field(SCAN, "I/O Intr")
 }
-record(ai, "$(P)$(R)HeatGain_RBV")
+# register 101
+record(ai, "$(P)$(R)Temp2_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R11) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_2")
+    field(SCAN, "I/O Intr")
 }
-
-# regulator event count
-record(longin, "$(P)$(R)EventCount_RBV")
+# register 102
+record(ai, "$(P)$(R)Temp3_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getD($R99) $(PORT) 0")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_3")
+    field(SCAN, "I/O Intr")
 }
-
-# input voltage
+# register 103
+record(ai, "$(P)$(R)Temp4_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_4")
+    field(SCAN, "I/O Intr")
+}
+# register 106
+record(ai, "$(P)$(R)Output_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_OUTPUT_TC")
+    field(SCAN, "I/O Intr")
+}
+# register 110
+record(ai, "$(P)$(R)PIDTa_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TA")
+    field(SCAN, "I/O Intr")
+}
+# register 112
+record(ai, "$(P)$(R)PIDTp_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TP")
+    field(SCAN, "I/O Intr")
+}
+# register 113
+record(ai, "$(P)$(R)PIDTi_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TI")
+    field(SCAN, "I/O Intr")
+}
+# register 114
+record(ai, "$(P)$(R)PIDTd_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TD")
+    field(SCAN, "I/O Intr")
+}
+# register 117
+record(ai, "$(P)$(R)PIDTLPa_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPA")
+    field(SCAN, "I/O Intr")
+}
+# register 118
+record(ai, "$(P)$(R)PIDTLPb_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPB")
+    field(SCAN, "I/O Intr")
+}
+# register 150
 record(ai, "$(P)$(R)InputVoltage_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R150) $(PORT) 0")
-    field(PREC, "2")
-    field(EGU,  "V")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_INPUT_VOLTAGE")
+    field(SCAN, "I/O Intr")
 }
-
-# internal voltage
-record(ai, "$(P)$(R)InternalVoltage_RBV")
+# register 151
+record(ai, "$(P)$(R)Internal12V_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R151) $(PORT) 0")
-    field(PREC, "2")
-    field(EGU,  "V")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_INTERNAL_VOLTAGE")
+    field(SCAN, "I/O Intr")
 }
-
-# main current
+# register 152
 record(ai, "$(P)$(R)MainCurrent_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R152) $(PORT) 0")
-    field(PREC, "2")
-    field(EGU,  "A")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_MAIN_CURRENT")
+    field(SCAN, "I/O Intr")
+}
+# register 153
+record(ai, "$(P)$(R)Fan1Current_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_FAN_1_CURRENT")
+    field(SCAN, "I/O Intr")
+}
+# register 154
+record(ai, "$(P)$(R)Fan2Current_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_FAN_2_CURRENT")
+    field(SCAN, "I/O Intr")
 }

@@ -12,10 +12,8 @@ include $(TOP)/configure/CONFIG
 # databases, templates, substitutions like this
 #DB += xxx.db
 DB += lairdtechPR59_main.template
-DB += lairdtechPR59_pid.template
-DB += lairdtechPR59_temp.template
-
-DB_INSTALLS += ../lairdtechPR59.proto
+#DB += lairdtechPR59_pid.template
+#DB += lairdtechPR59_temp.template
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

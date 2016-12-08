@@ -20,9 +20,11 @@
 # CONFIG_SITE file.
 
 TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
+SUPPORT=${MY_EPICS_SUPPORT}
 
 # If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
+ASYN=$(SUPPORT)/asyn4-30
 
 # EPICS_BASE usually appears last so other apps can override stuff:
 EPICS_BASE=${MY_EPICS_BASE}
