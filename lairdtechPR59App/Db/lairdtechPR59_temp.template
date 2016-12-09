@@ -2,248 +2,189 @@
 #                                                                             #
 #              Database for LairdTech PR-59 RS-232 serial device              #
 #                                                                             #
-#                             Temperature                                     #
+#                       Temperature sensor                                    #
 #                                                                             #
 ###############################################################################
 
-#######################    Temperature 1    ################################
-
-# temp 1 mode
-# TBD: Can the values be OR'ed?
-record(mbbo, "$(P)$(R)Temp1Mode")
+# register 100
+record(ai, "$(P)$(R)Temp$(T)_RBV")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setD($R55) $(PORT) 0")
-    field(ZRST, "VrefPlus")
-    field(ZRVL, "1")
-    field(ONST, "VrefMinus")
-    field(ONVL, "2")
-    field(TWST, "Steinhart")
-    field(TWVL, "4")
-    field(THST, "Zoom")
-    field(THVL, "8")
-    field(FLNK, "$(P)$(R)Temp1Mode_RBV.PROC PP NMS")
-}
-record(mbbi, "$(P)$(R)Temp1Mode_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getD($R55) $(PORT) 0")
-    field(ZRST, "VrefPlus")
-    field(ZRVL, "1")
-    field(ONST, "VrefMinus")
-    field(ONVL, "2")
-    field(TWST, "Steinhart")
-    field(TWVL, "4")
-    field(THST, "Zoom")
-    field(THVL, "8")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 gain
-record(ao, "$(P)$(R)Temp1Gain")
+# register 55
+record(mbbo, "$(P)$(R)Temp$(T)Mode")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R35) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1Gain_RBV.PROC PP NMS")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0x1F,$(TIMEOUT))LT_TEMP_$(T)_MODE")
+    field(ZRST, "NTC")
+    field(ZRVL, "4")
+    field(ONST, "PT")
+    field(ONVL, "16")
 }
-record(ai, "$(P)$(R)Temp1Gain_RBV")
+record(mbbi, "$(P)$(R)Temp$(T)Mode_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R35) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
-}
-
-# temp 1 offset
-record(ao, "$(P)$(R)Temp1Offset")
-{
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R36) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1Offset_RBV.PROC PP NMS")
-}
-record(ai, "$(P)$(R)Temp1Offset_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R36) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x1F,$(TIMEOUT))LT_TEMP_$(T)_MODE")
+    field(ZRST, "NTC")
+    field(ZRVL, "4")
+    field(ONST, "PT")
+    field(ONVL, "16")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 digital pot gain
-record(longout, "$(P)$(R)Temp1PotGain")
+# register 35
+record(ao, "$(P)$(R)Temp$(T)Gain")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setD($R44) $(PORT) 0")
-    field(FLNK, "$(P)$(R)Temp1PotGain_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_GAIN")
+    field(SCAN, "Passive")
 }
-record(longin, "$(P)$(R)Temp1PotGain_RBV")
+record(ai, "$(P)$(R)Temp$(T)Gain_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getD($R44) $(PORT) 0")
-    field(PINI, "YES")
-}
-
-# temp 1 digital pot offset
-record(longout, "$(P)$(R)Temp1PotOffset")
-{
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setD($R43) $(PORT) 0")
-    field(FLNK, "$(P)$(R)Temp1PotOffset_RBV.PROC PP NMS")
-}
-record(longin, "$(P)$(R)Temp1PotOffset_RBV")
-{
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getD($R43) $(PORT) 0")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_GAIN")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 value
-record(ai, "$(P)$(R)Temp1_RBV")
+# register 36
+record(ao, "$(P)$(R)Temp$(T)Offset")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R100) $(PORT) 0")
-    field(PREC, "2")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_OFFSET")
+    field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)Temp$(T)Offset_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_OFFSET")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 stainhart coeff A
-record(ao, "$(P)$(R)Temp1StainCoeffA")
+# register 59
+record(ao, "$(P)$(R)Temp$(T)CoeffA")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R59) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1StainCoeffA_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_A")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)Temp1StainCoeffA_RBV")
+record(ai, "$(P)$(R)Temp$(T)CoeffA_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R59) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_A")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 stainhart coeff B
-record(ao, "$(P)$(R)Temp1StainCoeffB")
+# register 60
+record(ao, "$(P)$(R)Temp$(T)CoeffB")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R60) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1StainCoeffB_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_B")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)Temp1StainCoeffB_RBV")
+record(ai, "$(P)$(R)Temp$(T)CoeffB_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R60) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_B")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 stainhart coeff C
-record(ao, "$(P)$(R)Temp1StainCoeffC")
+# register 61
+record(ao, "$(P)$(R)Temp$(T)CoeffC")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R61) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1StainCoeffC_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_C")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)Temp1StainCoeffC_RBV")
+record(ai, "$(P)$(R)Temp$(T)CoeffC_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R61) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_C")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 stainhart resistance low
-record(ao, "$(P)$(R)Temp1StainResL")
+# not sent to to the unit, used for internal Steinhart coefficient calculation
+record(ao, "$(P)$(R)Temp$(T)ResHigh")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R79) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1StainResL_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_HIGH")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)Temp1StainResL_RBV")
+record(ai, "$(P)$(R)Temp$(T)ResHigh_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R79) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_HIGH")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 stainhart resistance medium
-record(ao, "$(P)$(R)Temp1StainResM")
+# not sent to to the unit, used for internal Steinhart coefficient calculation
+record(ao, "$(P)$(R)Temp$(T)ResMed")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R80) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1StainResM_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_MED")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)Temp1StainResM_RBV")
+record(ai, "$(P)$(R)Temp$(T)ResMed_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R80) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_MED")
+    field(SCAN, "I/O Intr")
 }
 
-# temp 1 stainhart resistance high
-record(ao, "$(P)$(R)Temp1StainResH")
+# not sent to to the unit, used for internal Steinhart coefficient calculation
+record(ao, "$(P)$(R)Temp$(T)ResLow")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R81) $(PORT) 0")
-    field(PREC, "6")
-    field(FLNK, "$(P)$(R)Temp1StainResH_RBV.PROC PP NMS")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_LOW")
+    field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)Temp1StainResH_RBV")
+record(ai, "$(P)$(R)Temp$(T)ResLow_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R81) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_LOW")
+    field(SCAN, "I/O Intr")
 }
 
-#######################    Temperature 2    ################################
-
-# temp 2 value
-record(ai, "$(P)$(R)Temp2_RBV")
+# not sent to to the unit, used for internal Steinhart coefficient calculation
+record(ao, "$(P)$(R)Temp$(T)TempHigh")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R101) $(PORT) 0")
-    field(PREC, "2")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_HIGH")
+    field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)Temp$(T)TempHigh_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_HIGH")
+    field(SCAN, "I/O Intr")
 }
 
-#######################    Temperature 3    ################################
-
-# temp 3 value
-record(ai, "$(P)$(R)Temp3_RBV")
+# not sent to to the unit, used for internal Steinhart coefficient calculation
+record(ao, "$(P)$(R)Temp$(T)TempMed")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R102) $(PORT) 0")
-    field(PREC, "2")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_MED")
+    field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)Temp$(T)TempMed_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_MED")
+    field(SCAN, "I/O Intr")
 }
 
-#######################    Temperature 4    ################################
-
-# temp 4 value
-record(ai, "$(P)$(R)Temp4_RBV")
+# not sent to to the unit, used for internal Steinhart coefficient calculation
+record(ao, "$(P)$(R)Temp$(T)TempLow")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R103) $(PORT) 0")
-    field(PREC, "2")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_LOW")
+    field(SCAN, "Passive")
 }
-
-#######################  Temperature misc   ################################
-
-# temp REF value
-record(ai, "$(P)$(R)TempRef_RBV")
+record(ai, "$(P)$(R)Temp$(T)TempLow_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R105) $(PORT) 0")
-    field(PREC, "2")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_LOW")
+    field(SCAN, "I/O Intr")
 }

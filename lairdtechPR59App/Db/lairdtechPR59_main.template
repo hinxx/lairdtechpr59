@@ -23,7 +23,7 @@ record(waveform, "$(P)$(R)StatusMessage_RBV")
     field(SCAN, "I/O Intr")
 }
 
-# get board info and id name
+# command: $LI - get board info and id name
 record(waveform, "$(P)$(R)ID_RBV")
 {
     field(DTYP, "asynOctetRead")
@@ -33,7 +33,17 @@ record(waveform, "$(P)$(R)ID_RBV")
     field(SCAN, "I/O Intr")
 }
 
-# status flags (alarms and errors)
+# command: $V - get software version
+record(waveform, "$(P)$(R)Version_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_VERSION")
+    field(FTVL, "CHAR")
+    field(NELM, "512")
+    field(SCAN, "I/O Intr")
+}
+
+# command: $S - status flags (alarms and errors)
 record(waveform, "$(P)$(R)Status_RBV")
 {
     field(DTYP, "asynOctetRead")
@@ -41,6 +51,56 @@ record(waveform, "$(P)$(R)Status_RBV")
     field(FTVL, "CHAR")
     field(NELM, "512")
     field(SCAN, "I/O Intr")
+}
+
+# commands: $A, $A1 .. $A8 - continuous logging
+record(mbbo, "$(P)$(R)LoggingMode")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "A/D values")
+    field(ONVL, "1")
+    field(TWST, "Global values")
+    field(TWVL, "2")
+    field(THST, "PID values")
+    field(THVL, "3")
+    field(FRST, "Temp. values")
+    field(FRVL, "4")
+    field(FVST, "Regulator input")
+    field(FVVL, "5")
+    field(SXST, "Runtime data")
+    field(SXVL, "6")
+    field(SVST, "Runtime IEEE754")
+    field(SVVL, "7")
+    field(EIST, "Runtime LOGG")
+    field(EIVL, "8")
+    field(VAL,  "0")
+    field(PINI, "YES")
+}
+record(mbbi, "$(P)$(R)LoggingMode_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "A/D values")
+    field(ONVL, "1")
+    field(TWST, "Global values")
+    field(TWVL, "2")
+    field(THST, "PID values")
+    field(THVL, "3")
+    field(FRST, "Temp. values")
+    field(FRVL, "4")
+    field(FVST, "Regulator input")
+    field(FVVL, "5")
+    field(SXST, "Runtime data")
+    field(SXVL, "6")
+    field(SVST, "Runtime IEEE754")
+    field(SVVL, "7")
+    field(EIST, "Runtime LOGG")
+    field(EIVL, "8")
 }
 
 ##############################################################################
@@ -159,7 +219,6 @@ record(bi, "$(P)$(R)StatusAlarmTemp4Missing_RBV") {
     field(SCAN, "I/O Intr")
 }
 
-
 ##############################################################################
 # status error bits
 ##############################################################################
@@ -277,321 +336,243 @@ record(bi, "$(P)$(R)StatusErrorSensorAlarmIndicator_RBV") {
 }
 
 ##############################################################################
-# regulator mode
-##############################################################################
-record(mbbo, "$(P)$(R)RegulatorMode")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(OUT,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_REGULATOR_MODE")
-    field(ZRST, "Off")
-    field(ZRVL, "0")
-    field(ONST, "Power")
-    field(ONVL, "1")
-    field(TWST, "Algo")
-    field(TWVL, "2")
-    field(THST, "P")
-    field(THVL, "3")
-    field(FRST, "PI")
-    field(FRVL, "4")
-    field(FVST, "PD")
-    field(FVVL, "5")
-    field(SXST, "PID")
-    field(SXVL, "6")
-}
-record(mbbi, "$(P)$(R)RegulatorMode_RBV")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(INP,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_REGULATOR_MODE")
-    field(ZRST, "Off")
-    field(ZRVL, "0")
-    field(ONST, "Power")
-    field(ONVL, "1")
-    field(TWST, "Algo")
-    field(TWVL, "2")
-    field(THST, "P")
-    field(THVL, "3")
-    field(FRST, "PI")
-    field(FRVL, "4")
-    field(FVST, "PD")
-    field(FVVL, "5")
-    field(SXST, "PID")
-    field(SXVL, "6")
-    field(SCAN, "I/O Intr")
-}
-record(mbbo, "$(P)$(R)RegulatorModeFlags")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(OUT,  "@asynMask($(PORT),$(ADDR),0x3F0,$(TIMEOUT))LT_REGULATOR_MODE_FLAGS")
-    field(ZRST, "None")
-    field(ZRVL, "0")
-    field(ONST, "TrExtSelect")
-    field(ONVL, "1")
-    field(TWST, "TcPowerInt")
-    field(TWVL, "2")
-    field(THST, "SendParams")
-    field(THVL, "4")
-    field(FRST, "Autostart")
-    field(FRVL, "8")
-    field(FVST, "LoopMode")
-    field(FVVL, "16")
-    field(SXST, "InvertOutput")
-    field(SXVL, "32")
-}
-record(mbbi, "$(P)$(R)RegulatorModeFlags_RBV")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(INP,  "@asynMask($(PORT),$(ADDR),0x3F0,$(TIMEOUT))LT_REGULATOR_MODE_FLAGS")
-    field(ZRST, "None")
-    field(ZRVL, "0")
-    field(ONST, "TrExtSelect")
-    field(ONVL, "1")
-    field(TWST, "TcPowerInt")
-    field(TWVL, "2")
-    field(THST, "SendParams")
-    field(THVL, "4")
-    field(FRST, "Autostart")
-    field(FRVL, "8")
-    field(FVST, "LoopMode")
-    field(FVVL, "16")
-    field(SXST, "InvertOutput")
-    field(SXVL, "32")
-    field(SCAN, "I/O Intr")
-}
-record(mbbo, "$(P)$(R)RegulatorFilterA")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(OUT,  "@asynMask($(PORT),$(ADDR),0x3000,$(TIMEOUT))LT_REGULATOR_FILTER_A")
-    field(ZRST, "Off")
-    field(ZRVL, "0")
-    field(ONST, "Multiply")
-    field(ONVL, "1")
-    field(TWST, "Linear")
-    field(TWVL, "2")
-    field(THST, "Lead/lag")
-    field(THVL, "3")
-}
-record(mbbi, "$(P)$(R)RegulatorFilterA_RBV")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(INP,  "@asynMask($(PORT),$(ADDR),0x3000,$(TIMEOUT))LT_REGULATOR_FILTER_A")
-    field(ZRST, "Off")
-    field(ZRVL, "0")
-    field(ONST, "Multiply")
-    field(ONVL, "1")
-    field(TWST, "Linear")
-    field(TWVL, "2")
-    field(THST, "Lead/lag")
-    field(THVL, "3")
-    field(SCAN, "I/O Intr")
-}
-record(mbbo, "$(P)$(R)RegulatorFilterB")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(OUT,  "@asynMask($(PORT),$(ADDR),0xC000,$(TIMEOUT))LT_REGULATOR_FILTER_B")
-    field(ZRST, "Off")
-    field(ZRVL, "0")
-    field(ONST, "Multiply")
-    field(ONVL, "1")
-    field(TWST, "Linear")
-    field(TWVL, "2")
-    field(THST, "Lead/lag")
-    field(THVL, "3")
-}
-record(mbbi, "$(P)$(R)RegulatorFilterB_RBV")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(INP,  "@asynMask($(PORT),$(ADDR),0xC000,$(TIMEOUT))LT_REGULATOR_FILTER_B")
-    field(ZRST, "Off")
-    field(ZRVL, "0")
-    field(ONST, "Multiply")
-    field(ONVL, "1")
-    field(TWST, "Linear")
-    field(TWVL, "2")
-    field(THST, "Lead/lag")
-    field(THVL, "3")
-    field(SCAN, "I/O Intr")
-}
-
-
-
-##############################################################################
-# temperature sensor mode
-##############################################################################
-record(mbbo, "$(P)$(R)Temp1Mode")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(OUT,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_TEMP_1_MODE")
-    field(ZRST, "NTC")
-    field(ZRVL, "4")
-    field(ONST, "PT")
-    field(ONVL, "16")
-}
-record(mbbi, "$(P)$(R)Temp1Mode_RBV")
-{
-    field(DTYP, "asynUInt32Digital")
-    field(INP,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_TEMP_1_MODE")
-    field(ZRST, "NTC")
-    field(ZRVL, "4")
-    field(ONST, "PT")
-    field(ONVL, "16")
-    field(SCAN, "I/O Intr")
-}
-
-
-##############################################################################
-# continouos logging
-##############################################################################
-record(mbbo, "$(P)$(R)LoggingMode")
-{
-    field(DTYP, "asynInt32")
-    field(OUT,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
-    field(ZRST, "None")
-    field(ZRVL, "0")
-    field(ONST, "A/D values")
-    field(ONVL, "1")
-    field(TWST, "Global values")
-    field(TWVL, "2")
-    field(THST, "PID values")
-    field(THVL, "3")
-    field(FRST, "Temp. values")
-    field(FRVL, "4")
-    field(FVST, "Regulator input")
-    field(FVVL, "5")
-    field(SXST, "Runtime data")
-    field(SXVL, "6")
-    field(SVST, "Runtime IEEE754")
-    field(SVVL, "7")
-    field(EIST, "Runtime LOGG")
-    field(EIVL, "8")
-    field(VAL,  "0")
-    field(PINI, "YES")
-}
-record(mbbi, "$(P)$(R)LoggingMode_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
-    field(ZRST, "None")
-    field(ZRVL, "0")
-    field(ONST, "A/D values")
-    field(ONVL, "1")
-    field(TWST, "Global values")
-    field(TWVL, "2")
-    field(THST, "PID values")
-    field(THVL, "3")
-    field(FRST, "Temp. values")
-    field(FRVL, "4")
-    field(FVST, "Regulator input")
-    field(FVVL, "5")
-    field(SXST, "Runtime data")
-    field(SXVL, "6")
-    field(SVST, "Runtime IEEE754")
-    field(SVVL, "7")
-    field(EIST, "Runtime LOGG")
-    field(EIVL, "8")
-}
-
-
-
-
-
-
-##############################################################################
 # regulator parameters
 ##############################################################################
+record(mbbo, "$(P)$(R)Mode")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_MODE")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Power")
+    field(ONVL, "1")
+    #field(TWST, "Algo")
+    #field(TWVL, "2")
+    field(THST, "P")
+    field(THVL, "3")
+    field(FRST, "PI")
+    field(FRVL, "4")
+    field(FVST, "PD")
+    field(FVVL, "5")
+    field(SXST, "PID")
+    field(SXVL, "6")
+}
+record(mbbi, "$(P)$(R)Mode_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_MODE")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Power")
+    field(ONVL, "1")
+    #field(TWST, "Algo")
+    #field(TWVL, "2")
+    field(THST, "P")
+    field(THVL, "3")
+    field(FRST, "PI")
+    field(FRVL, "4")
+    field(FVST, "PD")
+    field(FVVL, "5")
+    field(SXST, "PID")
+    field(SXVL, "6")
+    field(SCAN, "I/O Intr")
+}
+record(mbbo, "$(P)$(R)ModeFlags")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0x3F0,$(TIMEOUT))LT_MODE_FLAGS")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "TrExtSelect")
+    field(ONVL, "1")
+    field(TWST, "TcPowerInt")
+    field(TWVL, "2")
+    field(THST, "SendParams")
+    field(THVL, "4")
+    field(FRST, "Autostart")
+    field(FRVL, "8")
+    field(FVST, "LoopMode")
+    field(FVVL, "16")
+    field(SXST, "InvertOutput")
+    field(SXVL, "32")
+}
+record(mbbi, "$(P)$(R)ModeFlags_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x3F0,$(TIMEOUT))LT_MODE_FLAGS")
+    field(ZRST, "None")
+    field(ZRVL, "0")
+    field(ONST, "TrExtSelect")
+    field(ONVL, "1")
+    field(TWST, "TcPowerInt")
+    field(TWVL, "2")
+    field(THST, "SendParams")
+    field(THVL, "4")
+    field(FRST, "Autostart")
+    field(FRVL, "8")
+    field(FVST, "LoopMode")
+    field(FVVL, "16")
+    field(SXST, "InvertOutput")
+    field(SXVL, "32")
+    field(SCAN, "I/O Intr")
+}
+record(mbbo, "$(P)$(R)FilterA")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0x3000,$(TIMEOUT))LT_FILTER_A")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+}
+record(mbbi, "$(P)$(R)FilterA_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0x3000,$(TIMEOUT))LT_FILTER_A")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+    field(SCAN, "I/O Intr")
+}
+record(mbbo, "$(P)$(R)FilterB")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),0xC000,$(TIMEOUT))LT_FILTER_B")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+}
+record(mbbi, "$(P)$(R)FilterB_RBV")
+{
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),0xC000,$(TIMEOUT))LT_FILTER_B")
+    field(ZRST, "Off")
+    field(ZRVL, "0")
+    field(ONST, "Multiply")
+    field(ONVL, "1")
+    field(TWST, "Linear")
+    field(TWVL, "2")
+    field(THST, "Lead/lag")
+    field(THVL, "3")
+    field(SCAN, "I/O Intr")
+}
 
-record(ao, "$(P)$(R)SetPoint")
+# register 0
+record(ao, "$(P)$(R)TrSetPoint")
 {
     field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_SET_POINT_TR")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TR_SET_POINT")
     field(SCAN, "Passive")
 }
-record(ai, "$(P)$(R)SetPoint_RBV")
+record(ai, "$(P)$(R)TrSetPoint_RBV")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_SET_POINT_TR")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TR_SET_POINT")
     field(SCAN, "I/O Intr")
 }
 
-##############################################################################
-# monitoring
-##############################################################################
-# register 100
-record(ai, "$(P)$(R)Temp1_RBV")
+# register 6
+record(ao, "$(P)$(R)TcLimit")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_1")
-    field(SCAN, "I/O Intr")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_LIMIT")
+    field(SCAN, "Passive")
 }
-# register 101
-record(ai, "$(P)$(R)Temp2_RBV")
+record(ai, "$(P)$(R)TcLimit_RBV")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_2")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_LIMIT")
     field(SCAN, "I/O Intr")
 }
-# register 102
-record(ai, "$(P)$(R)Temp3_RBV")
+
+# register 7
+record(ao, "$(P)$(R)TcDeadBand")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_3")
-    field(SCAN, "I/O Intr")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_DEADBAND")
+    field(SCAN, "Passive")
 }
-# register 103
-record(ai, "$(P)$(R)Temp4_RBV")
+record(ai, "$(P)$(R)TcDeadBand_RBV")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_4")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_DEADBAND")
     field(SCAN, "I/O Intr")
 }
+
+# register 9
+record(ai, "$(P)$(R)SampleRate_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_SAMPLE_RATE")
+    field(SCAN, "I/O Intr")
+}
+
+# register 10
+record(ao, "$(P)$(R)TcCoolGain")
+{
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_COOL_GAIN")
+    field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)TcCoolGain_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_COOL_GAIN")
+    field(SCAN, "I/O Intr")
+}
+
+# register 11
+record(ao, "$(P)$(R)TcHeatGain")
+{
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_HEAT_GAIN")
+    field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)TcHeatGain_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_HEAT_GAIN")
+    field(SCAN, "I/O Intr")
+}
+
+# register 99
+record(longin, "$(P)$(R)EventCounter_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_EVENT_COUNTER")
+    field(SCAN, "I/O Intr")
+}
+
+# register 105
+record(ai, "$(P)$(R)TRef_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TREF")
+    field(SCAN, "I/O Intr")
+}
+
 # register 106
-record(ai, "$(P)$(R)Output_RBV")
+record(ai, "$(P)$(R)TcOutput_RBV")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_OUTPUT_TC")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_OUTPUT")
     field(SCAN, "I/O Intr")
 }
-# register 110
-record(ai, "$(P)$(R)PIDTa_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TA")
-    field(SCAN, "I/O Intr")
-}
-# register 112
-record(ai, "$(P)$(R)PIDTp_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TP")
-    field(SCAN, "I/O Intr")
-}
-# register 113
-record(ai, "$(P)$(R)PIDTi_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TI")
-    field(SCAN, "I/O Intr")
-}
-# register 114
-record(ai, "$(P)$(R)PIDTd_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TD")
-    field(SCAN, "I/O Intr")
-}
-# register 117
-record(ai, "$(P)$(R)PIDTLPa_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPA")
-    field(SCAN, "I/O Intr")
-}
-# register 118
-record(ai, "$(P)$(R)PIDTLPb_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPB")
-    field(SCAN, "I/O Intr")
-}
+
 # register 150
 record(ai, "$(P)$(R)InputVoltage_RBV")
 {
@@ -599,6 +580,7 @@ record(ai, "$(P)$(R)InputVoltage_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_INPUT_VOLTAGE")
     field(SCAN, "I/O Intr")
 }
+
 # register 151
 record(ai, "$(P)$(R)Internal12V_RBV")
 {
@@ -606,24 +588,11 @@ record(ai, "$(P)$(R)Internal12V_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_INTERNAL_VOLTAGE")
     field(SCAN, "I/O Intr")
 }
+
 # register 152
 record(ai, "$(P)$(R)MainCurrent_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_MAIN_CURRENT")
-    field(SCAN, "I/O Intr")
-}
-# register 153
-record(ai, "$(P)$(R)Fan1Current_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_FAN_1_CURRENT")
-    field(SCAN, "I/O Intr")
-}
-# register 154
-record(ai, "$(P)$(R)Fan2Current_RBV")
-{
-    field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_FAN_2_CURRENT")
     field(SCAN, "I/O Intr")
 }

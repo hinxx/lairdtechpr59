@@ -6,177 +6,163 @@
 #                                                                             #
 ###############################################################################
 
-# PID - Kp
+# register 1
 record(ao, "$(P)$(R)PIDKp")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R1) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KP")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDKp_RBV.PROC PP NMS")
 }
 record(ai, "$(P)$(R)PIDKp_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R1) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KP")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Ki
+# register 2
 record(ao, "$(P)$(R)PIDKi")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R2) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KI")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDKi_RBV.PROC PP NMS")
 }
 record(ai, "$(P)$(R)PIDKi_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R2) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KI")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Kd
+# register 3
 record(ao, "$(P)$(R)PIDKd")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R3) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KD")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDKd_RBV.PROC PP NMS")
 }
 record(ai, "$(P)$(R)PIDKd_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R3) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KD")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - KLP_A
+# register 4
 record(ao, "$(P)$(R)PIDKLPa")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R4) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPA")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDKLPa_RBV.PROC PP NMS")
 }
 record(ai, "$(P)$(R)PIDKLPa_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R4) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPA")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - KLP_B
+# register 5
 record(ao, "$(P)$(R)PIDKLPb")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R5) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPB")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDKLPb_RBV.PROC PP NMS")
 }
 record(ai, "$(P)$(R)PIDKLPb_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R5) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPB")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - iLim
-record(ao, "$(P)$(R)PIDILim")
+# register 8
+record(ao, "$(P)$(R)PIDILimit")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R8) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_ILIMIT")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDILim_RBV.PROC PP NMS")
 }
-record(ai, "$(P)$(R)PIDILim_RBV")
+record(ai, "$(P)$(R)PIDILimit_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R8) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_ILIMIT")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Decay
+# register 12
 record(ao, "$(P)$(R)PIDDecay")
 {
-    field(DTYP, "stream")
-    field(OUT,  "@lairdtechPR59.proto setF($R12) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_DECAY")
     field(PREC, "6")
-    field(FLNK, "$(P)$(R)PIDDecay_RBV.PROC PP NMS")
 }
 record(ai, "$(P)$(R)PIDDecay_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R12) $(PORT) 0")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_DECAY")
     field(PREC, "6")
-    field(PINI, "YES")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Ta
+# register 110
 record(ai, "$(P)$(R)PIDTa_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R110) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TA")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Te
+# register 111
 record(ai, "$(P)$(R)PIDTe_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R111) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TE")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Tp
+# register 112
 record(ai, "$(P)$(R)PIDTp_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R112) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TP")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Ti
+# register 113
 record(ai, "$(P)$(R)PIDTi_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R113) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TI")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - Td
+# register 114
 record(ai, "$(P)$(R)PIDTd_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R114) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TD")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - TLP_A
+# register 117
 record(ai, "$(P)$(R)PIDTLPa_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R117) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPA")
+    field(SCAN, "I/O Intr")
 }
 
-# PID - TLP_B
+# register 118
 record(ai, "$(P)$(R)PIDTLPb_RBV")
 {
-    field(DTYP, "stream")
-    field(INP,  "@lairdtechPR59.proto getF($R118) $(PORT) 0")
-    field(PREC, "6")
-    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPB")
+    field(SCAN, "I/O Intr")
 }

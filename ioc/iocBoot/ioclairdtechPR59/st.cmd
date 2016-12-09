@@ -27,7 +27,6 @@ asynSetOption("$(SERIAL_PORT)", 0, "stop",   "1")
 asynSetOption("$(SERIAL_PORT)", 0, "clocal", "Y")
 asynSetOption("$(SERIAL_PORT)", 0, "crtscts","N")
 
-#asynOctetSetInputEos("$(SERIAL_PORT)", 0, "> ")
 asynOctetSetInputEos("$(SERIAL_PORT)", 0, "\r\n")
 asynOctetSetOutputEos("$(SERIAL_PORT)", 0, "\r")
 
@@ -36,13 +35,14 @@ asynOctetSetOutputEos("$(SERIAL_PORT)", 0, "\r")
 
 # LTPR59Configure(const char *portName, const char *serialPort);
 LTPR59Configure($(PORT), $(SERIAL_PORT))
-asynSetTraceIOMask("$(PORT)",0,0xff)
-asynSetTraceMask("$(PORT)",0,0xff)
+#asynSetTraceIOMask("$(PORT)",0,0xff)
+#asynSetTraceMask("$(PORT)",0,0xff)
 
 # Load record instances
 dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_main.template","P=$(PORT):,R=,PORT=$(PORT),SERIAL_PORT=$(SERIAL_PORT),ADDR=0,TIMEOUT=1")
-#dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_pid.template","P=$(PORT):,R=,PORT=$(PORT)")
-#dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_temp.template","P=$(PORT):,R=,PORT=$(PORT)")
+dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_pid.template","P=$(PORT):,R=,PORT=$(PORT),ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_temp.template","P=$(PORT):,R=,T=1,PORT=$(PORT),ADDR=0,TIMEOUT=1")
+# TODO: Add support for other temperature sensors
 dbLoadRecords("$(ASYN)/db/asynRecord.db","P=$(PORT):,R=asyn,PORT=$(PORT),ADDR=0,OMAX=100,IMAX=100")
 
 cd "${TOP}/iocBoot/${IOC}"
