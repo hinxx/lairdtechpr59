@@ -117,14 +117,13 @@ private:
 	/* These are the methods that are new to this class */
 	void hexdump(void *mem, unsigned int len);
     void updateStatus(const char *msg);
-    asynStatus trimResponse(char *buf, unsigned int *len);
     asynStatus convToString(epicsInt32 val, char *buf, unsigned int *len);
     asynStatus convToString(epicsFloat64 val, char *buf, unsigned int *len);
     asynStatus convFromString(epicsInt32 *val);
     asynStatus convFromString(epicsFloat64 *val);
 
     asynStatus xfer(unsigned int reqType, const char *cmd, unsigned int reg,
-    		const char *data, bool readData = true, double timeout = 1.0);
+    		const char *data, bool readData = true, double timeout = 0.3);
     asynStatus writeDataFloat(unsigned int reg, const epicsFloat64 val);
     asynStatus writeDataInt(unsigned int reg, const epicsInt32 val);
     asynStatus readDataFloat(unsigned int reg, epicsFloat64 *val);

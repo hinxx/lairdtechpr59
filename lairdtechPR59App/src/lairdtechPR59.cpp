@@ -81,6 +81,91 @@ void LTPR59::hexdump(void *mem, unsigned int len) {
 	}
 }
 
+asynStatus LTPR59::serialPortWriteRead(double timeout) {
+	int eomReason;
+	asynStatus status;
+
+	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
+	hexdump(mReq, mReqSz);
+
+	status = pasynOctetSyncIO->writeRead(mAsynUserCommand,
+			mReq, mReqSz, mResp, mRespSz,
+			timeout, &mReqActSz, &mRespActSz, &eomReason);
+
+	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
+	hexdump(mResp, mRespActSz);
+
+	if (status) {
+		asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
+				"%s:%s, status=%d, eomReason=%d\n",
+				driverName, __func__, status, eomReason);
+	} else {
+		asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+			  "%s:%s: status=%d, eomReason=%d\n",
+			  driverName, __func__, status, eomReason);
+	}
+
+	return status;
+}
+
+asynStatus LTPR59::serialPortWrite(double timeout) {
+	asynStatus status;
+
+	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
+	hexdump(mReq, mReqSz);
+
+	status = pasynOctetSyncIO->write(mAsynUserCommand,
+			mReq, mReqSz,
+			timeout, &mReqActSz);
+
+	printf("%s: request actual size %ld bytes\n", __func__, mReqActSz);
+	if (status) {
+		asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
+				"%s:%s, status=%d\n",
+				driverName, __func__, status);
+	} else {
+		asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+			  "%s:%s: status=%d\n",
+			  driverName, __func__, status);
+	}
+
+	return status;
+}
+
+asynStatus LTPR59::serialPortRead(double timeout) {
+	int eomReason;
+	asynStatus status;
+
+	status = pasynOctetSyncIO->read(mAsynUserCommand,
+			mResp, mRespSz,
+			timeout, &mRespActSz, &eomReason);
+
+
+	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
+	hexdump(mResp, mRespActSz);
+
+	if (status) {
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+				"%s:%s, status=%d\n",
+				driverName, __func__, status);
+	} else {
+		asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+			  "%s:%s: status=%d, eomReason=%d\n",
+			  driverName, __func__, status, eomReason);
+	}
+
+	return status;
+}
+
+void LTPR59::updateStatus(const char *msg) {
+    memcpy(mStatusMsg, msg, strlen(msg));
+	printf("Status message: '%s'\n", mStatusMsg);
+	setStringParam(LTStatusMessage, mStatusMsg);
+
+	/* Do callbacks so higher layers see any changes */
+	callParamCallbacks(0);
+}
+
 asynStatus LTPR59::convToString(epicsInt32 val, char *buf, unsigned int *len) {
 	if (buf == NULL) {
 		return asynError;
@@ -109,53 +194,12 @@ asynStatus LTPR59::convToString(epicsFloat64 val, char *buf, unsigned int *len) 
 	return asynSuccess;
 }
 
-asynStatus LTPR59::trimResponse(char *buf, unsigned int *len) {
-	char *s, *e, *b;
-	unsigned int l;
-
-	s = &mResp[0];
-	e = &mResp[mRespActSz-1];
-	while (*s && (*s != '\n')) {
-		s++;
-	}
-	while (*e && (*e != '\r')) {
-		e--;
-	}
-	assert(*s != 0);
-	assert(*e != 0);
-	s++;
-	b = buf;
-	l = 0;
-	do {
-		*b = *s;
-		b++;
-		s++;
-		l++;
-	} while ((s != e) && (l < (*len - 1)));
-	*len = l;
-	*b = '\0';
-	printf("%s: Final string [%d]: '%s'\n", __func__, *len, buf);
-
-	if (*buf == '?') {
-	    updateStatus("Unknown command");
-	    return asynError;
-	}
-
-	return asynSuccess;
-}
-
 asynStatus LTPR59::convFromString(epicsInt32 *val) {
 	asynStatus status = asynSuccess;
 	int v;
 	int n;
-	char buf[LTPR59_MAX_MSG_SZ] = {0};
-	unsigned int len = LTPR59_MAX_MSG_SZ;
 
-	status = trimResponse(buf, &len);
-	if (status) {
-		return status;
-	}
-	n = sscanf(buf, "%d", &v);
+	n = sscanf(mResp, "%d", &v);
 	if (n != 1) {
 		updateStatus("Failed to parse value");
 	    return asynError;
@@ -170,14 +214,8 @@ asynStatus LTPR59::convFromString(epicsFloat64 *val) {
 	asynStatus status = asynSuccess;
 	float v;
 	int n;
-	char buf[LTPR59_MAX_MSG_SZ] = {0};
-	unsigned int len = LTPR59_MAX_MSG_SZ;
 
-	status = trimResponse(buf, &len);
-	if (status) {
-		return status;
-	}
-	n = sscanf(buf, "%f", &v);
+	n = sscanf(mResp, "%f", &v);
 	if (n != 1) {
 		updateStatus("Failed to parse value");
 	    return asynError;
@@ -242,12 +280,26 @@ asynStatus LTPR59::xfer(unsigned int reqType, const char *cmd,
 	mReqSz = len;
 	mRespSz = LTPR59_MAX_MSG_SZ;
 
+	/* Send request and read back the echoed request line. */
+	status = serialPortWriteRead(timeout);
+	if (status) {
+		return status;
+	}
 	if (readData) {
-		// used for all regular commands and register access
-		status = serialPortWriteRead(timeout);
-	} else {
-		// used when starting continuous logging
-		status = serialPortWrite(timeout);
+		/* Read the actual response. */
+		status = serialPortRead(timeout);
+		if (status) {
+			return status;
+		}
+	}
+
+	if (mRespActSz == 0) {
+	    updateStatus("No response");
+		return asynError;
+	}
+	if (mResp[0] == '?') {
+	    updateStatus("Unknown command");
+	    return asynError;
 	}
 
 	return status;
@@ -284,10 +336,6 @@ asynStatus LTPR59::readString(const char *cmd, char *val, unsigned int *len) {
 	if (status) {
 		return status;
 	}
-	status = trimResponse(val, len);
-	if (status) {
-		return status;
-	}
 
 	return status;
 }
@@ -320,14 +368,12 @@ asynStatus LTPR59::writeDataInt(unsigned int reg, const epicsInt32 val) {
 	return status;
 }
 
-
 /**
  * Do data readout from the detector. Meant to be run in own thread.
  */
 void LTPR59::dataTask(void) {
 	asynStatus status = asynSuccess;
 	epicsInt32 contLog = 0;
-	char *p;
 	int n;
 	int iv[20];
 	float fv[20];
@@ -356,21 +402,15 @@ void LTPR59::dataTask(void) {
 		// Sanity check that main thread thinks we are acquiring data
 		while (mAcquiringData) {
 			this->unlock();
-			status = serialPortRead(1.0);
+			status = serialPortRead(0.3);
 			this->lock();
 
 			if (status) {
 				break;
 			}
 
-			p = mResp;
-			n = mRespActSz;
-			while (n && (*p != '[')) {
-				p++;
-				n--;
-			}
-			if (!n) {
-				printf("%s: Failed to find '['..\n", __func__);
+			if (mResp[0] != '[') {
+				printf("%s: No '[' in response..\n", __func__);
 				continue;
 			}
 
@@ -382,7 +422,7 @@ void LTPR59::dataTask(void) {
 				 *
 				 * XXX: 16 labels, 17 values; doc 1.6c has only 13 listed fields?!
 				 */
-				n = sscanf(p, "[%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d]",
+				n = sscanf(mResp, "[%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d]",
 					&iv[0], &iv[1], &iv[2],  &iv[3],  &iv[4],  &iv[5],  &iv[6],  &iv[7],
 					&iv[8], &iv[9], &iv[10], &iv[11], &iv[12], &iv[13], &iv[14], &iv[15], &iv[16]);
 				printf("%s: Parsed %d values..\n", __func__, n);
@@ -392,7 +432,7 @@ void LTPR59::dataTask(void) {
 				 * View ERR Mode Temp1 TcOut F1out F2out
 				 * [2 100AC001 00 1023 0.0000 0.0000 0.0000]
 				 */
-				n = sscanf(p, "[%d %X %X %d %f %f %f]",
+				n = sscanf(mResp, "[%d %X %X %d %f %f %f]",
 					&iv[0], &iv[1], &iv[2], &iv[3], &fv[0], &fv[1], &fv[2]);
 				printf("%s: Parsed %d values..\n", __func__, n);
 
@@ -401,7 +441,7 @@ void LTPR59::dataTask(void) {
 				 * View ERR Mode Tc Ta1 Ta2 Tr Ta Tp Ti Td TLP_A TLP_B
 				 * [3 100AC001 00 0.0000 -999.9000 -999.9000 20.0000 -999.9000 0.0000 0.0000 0.0000 20.0000 36.6650]
 				 */
-				n = sscanf(p, "[%d %X %X %f %f %f %f %f %f %f %f %f %f]",
+				n = sscanf(mResp, "[%d %X %X %f %f %f %f %f %f %f %f %f %f]",
 					&iv[0], &iv[1], &iv[2], &fv[0], &fv[1], &fv[2], &fv[3], &fv[4],
 					&fv[5], &fv[6], &fv[7], &fv[8], &fv[9]);
 				printf("%s: Parsed %d values..\n", __func__, n);
@@ -423,7 +463,7 @@ void LTPR59::dataTask(void) {
 				 * View ERR Mode Tc Tr Curr
 				 * [4 100AC001 00 0.0000 20.0000 127]
 				 */
-				n = sscanf(p, "[%d %X %X %f %f %d]",
+				n = sscanf(mResp, "[%d %X %X %f %f %d]",
 					&iv[0], &iv[1], &iv[2], &fv[0], &fv[1], &iv[3]);
 				printf("%s: Parsed %d values..\n", __func__, n);
 
@@ -432,7 +472,7 @@ void LTPR59::dataTask(void) {
 				 * View ERR Mode TrExt Tr Ta
 				 * [5 100AC001 00 0.0000 20.0000 -999.9000]
 				 */
-				n = sscanf(p, "[%d %X %X %f %f %f]",
+				n = sscanf(mResp, "[%d %X %X %f %f %f]",
 					&iv[0], &iv[1], &iv[2], &fv[0], &fv[1], &fv[2]);
 				printf("%s: Parsed %d values..\n", __func__, n);
 
@@ -467,7 +507,6 @@ void LTPR59::dataTask(void) {
 
 	printf("Data thread is down!\n");
 }
-
 
 asynStatus LTPR59::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
@@ -586,6 +625,8 @@ asynStatus LTPR59::writeUInt32Digital(asynUser *pasynUser, epicsUInt32 value, ep
 		regVal |= bits;
 		status = writeDataInt(13, regVal);
 	} else if (function == LTTemp1Mode) {
+		/* Temp1 has zoom mode */
+		value |= 0x08;
 		status = writeDataInt(55, (epicsInt32)value);
 	}
 
@@ -798,91 +839,6 @@ asynStatus LTPR59::readOctet(asynUser *pasynUser, char *value, size_t maxChars,
 	}
 
 	return status;
-}
-
-asynStatus LTPR59::serialPortWriteRead(double timeout) {
-	int eomReason;
-	asynStatus status;
-
-	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
-	hexdump(mReq, mReqSz);
-
-	status = pasynOctetSyncIO->writeRead(mAsynUserCommand,
-			mReq, mReqSz, mResp, mRespSz,
-			timeout, &mReqActSz, &mRespActSz, &eomReason);
-
-	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
-	hexdump(mResp, mRespActSz);
-
-	if (status) {
-		asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
-				"%s:%s, status=%d, eomReason=%d\n",
-				driverName, __func__, status, eomReason);
-	} else {
-		asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: status=%d, eomReason=%d\n",
-			  driverName, __func__, status, eomReason);
-	}
-
-	return status;
-}
-
-asynStatus LTPR59::serialPortWrite(double timeout) {
-	asynStatus status;
-
-	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
-	hexdump(mReq, mReqSz);
-
-	status = pasynOctetSyncIO->write(mAsynUserCommand,
-			mReq, mReqSz,
-			timeout, &mReqActSz);
-
-	printf("%s: request actual size %ld bytes\n", __func__, mReqActSz);
-	if (status) {
-		asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
-				"%s:%s, status=%d\n",
-				driverName, __func__, status);
-	} else {
-		asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: status=%d\n",
-			  driverName, __func__, status);
-	}
-
-	return status;
-}
-
-asynStatus LTPR59::serialPortRead(double timeout) {
-	int eomReason;
-	asynStatus status;
-
-	status = pasynOctetSyncIO->read(mAsynUserCommand,
-			mResp, mRespSz,
-			timeout, &mRespActSz, &eomReason);
-
-
-	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
-	hexdump(mResp, mRespActSz);
-
-	if (status) {
-		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-				"%s:%s, status=%d\n",
-				driverName, __func__, status);
-	} else {
-		asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: status=%d, eomReason=%d\n",
-			  driverName, __func__, status, eomReason);
-	}
-
-	return status;
-}
-
-void LTPR59::updateStatus(const char *msg) {
-    memcpy(mStatusMsg, msg, strlen(msg));
-	printf("Status message: '%s'\n", mStatusMsg);
-	setStringParam(LTStatusMessage, mStatusMsg);
-
-	/* Do callbacks so higher layers see any changes */
-	callParamCallbacks(0);
 }
 
 void LTPR59::report(FILE *fp, int details) {

@@ -27,7 +27,8 @@ asynSetOption("$(SERIAL_PORT)", 0, "stop",   "1")
 asynSetOption("$(SERIAL_PORT)", 0, "clocal", "Y")
 asynSetOption("$(SERIAL_PORT)", 0, "crtscts","N")
 
-asynOctetSetInputEos("$(SERIAL_PORT)", 0, "> ")
+#asynOctetSetInputEos("$(SERIAL_PORT)", 0, "> ")
+asynOctetSetInputEos("$(SERIAL_PORT)", 0, "\r\n")
 asynOctetSetOutputEos("$(SERIAL_PORT)", 0, "\r")
 
 #asynSetTraceIOMask("$(SERIAL_PORT)",0,0xff)

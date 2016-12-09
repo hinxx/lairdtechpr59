@@ -421,35 +421,19 @@ record(mbbo, "$(P)$(R)Temp1Mode")
 {
     field(DTYP, "asynUInt32Digital")
     field(OUT,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_TEMP_1_MODE")
-    field(ZRST, "None")
-    field(ZRVL, "0")
-    field(ONST, "VrefPlus")
-    field(ONVL, "1")
-    field(TWST, "VrefMinus")
-    field(TWVL, "2")
-    field(THST, "Steinhart")
-    field(THVL, "4")
-    field(FRST, "Zoom")
-    field(FRVL, "8")
-    field(FVST, "Steinhart+Zoom")
-    field(FVVL, "12")
+    field(ZRST, "NTC")
+    field(ZRVL, "4")
+    field(ONST, "PT")
+    field(ONVL, "16")
 }
 record(mbbi, "$(P)$(R)Temp1Mode_RBV")
 {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0xF,$(TIMEOUT))LT_TEMP_1_MODE")
-    field(ZRST, "None")
-    field(ZRVL, "0")
-    field(ONST, "VrefPlus")
-    field(ONVL, "1")
-    field(TWST, "VrefMinus")
-    field(TWVL, "2")
-    field(THST, "Steinhart")
-    field(THVL, "4")
-    field(FRST, "Zoom")
-    field(FRVL, "8")
-    field(FVST, "Steinhart+Zoom")
-    field(FVVL, "12")
+    field(ZRST, "NTC")
+    field(ZRVL, "4")
+    field(ONST, "PT")
+    field(ONVL, "16")
     field(SCAN, "I/O Intr")
 }
 
@@ -457,7 +441,7 @@ record(mbbi, "$(P)$(R)Temp1Mode_RBV")
 ##############################################################################
 # continouos logging
 ##############################################################################
-record(mbbo, "$(P)$(R)ContinouosLog")
+record(mbbo, "$(P)$(R)LoggingMode")
 {
     field(DTYP, "asynInt32")
     field(OUT,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
@@ -482,7 +466,7 @@ record(mbbo, "$(P)$(R)ContinouosLog")
     field(VAL,  "0")
     field(PINI, "YES")
 }
-record(mbbi, "$(P)$(R)ContinouosLog_RBV")
+record(mbbi, "$(P)$(R)LoggingMode_RBV")
 {
     field(DTYP, "asynInt32")
     field(INP,  "@asynMask($(PORT),$(ADDR),$(TIMEOUT))LT_LOGGING_MODE")
@@ -529,7 +513,7 @@ record(ai, "$(P)$(R)SetPoint_RBV")
 }
 
 ##############################################################################
-# monitoring analog inputs
+# monitoring
 ##############################################################################
 # register 100
 record(ai, "$(P)$(R)Temp1_RBV")
