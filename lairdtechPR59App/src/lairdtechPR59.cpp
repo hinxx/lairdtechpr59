@@ -330,9 +330,14 @@ asynStatus LTPR59::readDataInt(unsigned int reg, epicsInt32 *val) {
 asynStatus LTPR59::readString(const char *cmd, char *val, unsigned int *len) {
 	asynStatus status = asynSuccess;
 
-	status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL);
+	status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL, true);
 	if (status) {
 		return status;
+	}
+
+	if (val && len) {
+		memcpy(val, mResp, mRespActSz);
+		*len = mRespActSz;
 	}
 
 	return status;
@@ -531,6 +536,18 @@ asynStatus LTPR59::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 		} else {
 			mAcquiringData = 0;
 		}
+	} else if (function == LTStatusClear) {
+		status = readString("$SC", NULL, NULL);
+	} else if (function == LTStartStop) {
+		if (value) {
+			status = readString("$W", NULL, NULL);
+		} else {
+			status = readString("$Q", NULL, NULL);
+		}
+	} else if (function == LTClearEEPROM) {
+		status = readString("$RC", NULL, NULL);
+	} else if (function == LTWriteEEPROM) {
+		status = readString("$RW", NULL, NULL);
 	}
 
 	/* Do callbacks so higher layers see any changes */
@@ -890,7 +907,7 @@ asynStatus LTPR59::readOctet(asynUser *pasynUser, char *value, size_t maxChars,
 	} else {
 		status = asynPortDriver::readOctet(pasynUser, value, maxChars, nActual, eomReason);
 	}
-	printf("%s: function %d, addr %d, value %s\n", __func__, function, addr, value);
+	printf("%s: function %d, addr %d, len %d, value %s\n", __func__, function, addr, len, value);
 
 	if (status) {
 		asynPrint(pasynUser, ASYN_TRACE_ERROR,
@@ -946,6 +963,10 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	createParam(LTStatusAlarmString,		asynParamUInt32Digital,	&LTStatusAlarm);
 	createParam(LTStatusErrorString,		asynParamUInt32Digital,	&LTStatusError);
 	createParam(LTLoggingModeString,		asynParamInt32,			&LTLoggingMode);
+	createParam(LTStatusClearString,		asynParamInt32,			&LTStatusClear);
+	createParam(LTStartStopString,			asynParamInt32,			&LTStartStop);
+	createParam(LTWriteEEPROMString,		asynParamInt32,			&LTWriteEEPROM);
+	createParam(LTClearEEPROMString,		asynParamInt32,			&LTClearEEPROM);
 	createParam(LTModeString,				asynParamUInt32Digital,	&LTMode);
 	createParam(LTModeFlagsString,			asynParamUInt32Digital,	&LTModeFlags);
 	createParam(LTFilterAString,			asynParamUInt32Digital,	&LTFilterA);

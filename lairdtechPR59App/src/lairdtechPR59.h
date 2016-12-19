@@ -24,6 +24,10 @@
 #define LTStatusAlarmString				"LT_STATUS_ALARM"			/**< (asynUInt32Digital,	r/o) Status alarm flags */
 #define LTStatusErrorString				"LT_STATUS_ERROR"			/**< (asynUInt32Digital,	r/o) Status error flags */
 #define LTLoggingModeString				"LT_LOGGING_MODE"			/**< (asynInt32,			r/w) Continuous logging mode */
+#define LTStatusClearString				"LT_STATUS_CLEAR"			/**< (asynInt32,			w/o) Clear status flags */
+#define LTStartStopString				"LT_START_STOP"				/**< (asynInt32,			r/w) Start / stop regulator */
+#define LTWriteEEPROMString				"LT_WRITE_EEPROM"			/**< (asynInt32,			w/o) Write settings to EEPROM */
+#define LTClearEEPROMString				"LT_CLEAR_EEPROM"			/**< (asynInt32,			w/o) Clear EEPROM */
 #define LTModeString					"LT_MODE"					/**< (asynUInt32Digital,	r/w) Regulator mode of operation */
 #define LTModeFlagsString				"LT_MODE_FLAGS"				/**< (asynUInt32Digital,	r/w) Regulator mode flags */
 #define LTFilterAString					"LT_FILTER_A"				/**< (asynUInt32Digital,	r/w) Regulator filter A */
@@ -110,6 +114,10 @@ protected:
 	int LTStatusAlarm;
 	int LTStatusError;
 	int LTLoggingMode;
+	int LTStatusClear;
+	int LTStartStop;
+	int LTWriteEEPROM;
+	int LTClearEEPROM;
 	int LTMode;
 	int LTModeFlags;
 	int LTFilterA;
