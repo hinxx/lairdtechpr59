@@ -12,6 +12,7 @@ record(ai, "$(P)$(R)Temp$(T)_RBV")
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # register 55
@@ -41,12 +42,14 @@ record(ao, "$(P)$(R)Temp$(T)Gain")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_GAIN")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)Gain_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_GAIN")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # register 36
@@ -55,12 +58,14 @@ record(ao, "$(P)$(R)Temp$(T)Offset")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_OFFSET")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)Offset_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_OFFSET")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # register 59
@@ -69,12 +74,14 @@ record(ao, "$(P)$(R)Temp$(T)CoeffA")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_A")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)CoeffA_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_A")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # register 60
@@ -83,12 +90,14 @@ record(ao, "$(P)$(R)Temp$(T)CoeffB")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_B")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)CoeffB_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_B")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # register 61
@@ -97,12 +106,14 @@ record(ao, "$(P)$(R)Temp$(T)CoeffC")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_C")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)CoeffC_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_C")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation
@@ -111,12 +122,14 @@ record(ao, "$(P)$(R)Temp$(T)ResHigh")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_HIGH")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)ResHigh_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_HIGH")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation
@@ -125,12 +138,14 @@ record(ao, "$(P)$(R)Temp$(T)ResMed")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_MED")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)ResMed_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_MED")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation
@@ -139,12 +154,14 @@ record(ao, "$(P)$(R)Temp$(T)ResLow")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_LOW")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)ResLow_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_RES_LOW")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation
@@ -153,12 +170,14 @@ record(ao, "$(P)$(R)Temp$(T)TempHigh")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_HIGH")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)TempHigh_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_HIGH")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation
@@ -167,12 +186,14 @@ record(ao, "$(P)$(R)Temp$(T)TempMed")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_MED")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)TempMed_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_MED")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation
@@ -181,10 +202,12 @@ record(ao, "$(P)$(R)Temp$(T)TempLow")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_LOW")
     field(SCAN, "Passive")
+    field(PREC, "4")
 }
 record(ai, "$(P)$(R)Temp$(T)TempLow_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_TEMP_LOW")
     field(SCAN, "I/O Intr")
+    field(PREC, "4")
 }

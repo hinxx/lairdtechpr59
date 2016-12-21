@@ -28,6 +28,9 @@
 #define LTStartStopString				"LT_START_STOP"				/**< (asynInt32,			r/w) Start / stop regulator */
 #define LTWriteEEPROMString				"LT_WRITE_EEPROM"			/**< (asynInt32,			w/o) Write settings to EEPROM */
 #define LTClearEEPROMString				"LT_CLEAR_EEPROM"			/**< (asynInt32,			w/o) Clear EEPROM */
+#define LTSendString					"LT_SEND"					/**< (asynInt32,			w/o) Send parameters */
+#define LTRetrieveString				"LT_RETRIEVE"				/**< (asynInt32,			w/o) Retrieve parameters */
+
 #define LTModeString					"LT_MODE"					/**< (asynUInt32Digital,	r/w) Regulator mode of operation */
 #define LTModeFlagsString				"LT_MODE_FLAGS"				/**< (asynUInt32Digital,	r/w) Regulator mode flags */
 #define LTFilterAString					"LT_FILTER_A"				/**< (asynUInt32Digital,	r/w) Regulator filter A */
@@ -39,6 +42,8 @@
 #define LTSampleRateString				"LT_SAMPLE_RATE"			/**< (asynInt32,			r/o) Regulator sample rate */
 #define LTTcCoolGainString				"LT_TC_COOL_GAIN"			/**< (asynFloat64,			r/w) Cool gain of the Tc signal */
 #define LTTcHeatGainString				"LT_TC_HEAT_GAIN"			/**< (asynFloat64,			r/w) Heat gain of the Tc signal */
+#define LTDeadBandString				"LT_DEAD_BAND"				/**< (asynFloat64,			r/w) ON/OFF dead band */
+#define LTHysteresisString				"LT_HYSTERESIS"				/**< (asynFloat64,			r/w) ON/OFF hysteresis */
 #define LTTRefString					"LT_TREF"					/**< (asynFloat64,			r/o) TRef value */
 #define LTTcOutputString				"LT_TC_OUTPUT"				/**< (asynFloat64,			r/o) Output Tc value */
 #define LTInputVoltageString			"LT_INPUT_VOLTAGE"			/**< (asynFloat64,			r/o) Input voltage */
@@ -74,6 +79,31 @@
 #define LTPIDTLPaString					"LT_PID_TLPA"				/**< (asynFloat64,			r/o) PID TLP a value */
 #define LTPIDTLPbString					"LT_PID_TLPB"				/**< (asynFloat64,			r/o) PID TLP b value */
 
+//enum {
+//	LTPR59RegisterTypeUnknown = 0,
+//	LTPR59RegisterTypeInt,
+//	LTPR59RegisterTypeUInt,
+//	LTPR59RegisterTypeFloat
+//};
+//
+//enum {
+//	LTPR59RegisterAccessUnknown = 0,
+//	LTPR59RegisterAccessReadOnly,
+//	LTPR59RegisterAccessReadWrite,
+//	LTPR59RegisterAccessWriteOnly
+//};
+//
+struct LTPR59Register {
+	int num;
+	int mask;
+	int write;
+	asynParamType type;
+//	int acc;
+	int param;
+//	char str[64];
+};
+#define LTPR59_MAX_REGISTERS	256
+
 class LTPR59 : public asynPortDriver {
 public:
 	LTPR59(const char *portName, const char *serialPort);
@@ -81,13 +111,13 @@ public:
 
 	/* These are the methods that we override from asynPortDriver */
 	virtual asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
-    virtual asynStatus readInt32(asynUser *pasynUser, epicsInt32 *value);
-    virtual asynStatus readUInt32Digital(asynUser *pasynUser, epicsUInt32 *value, epicsUInt32 mask);
-    virtual asynStatus writeUInt32Digital(asynUser *pasynUser, epicsUInt32 value, epicsUInt32 mask);
-    virtual asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
-    virtual asynStatus readFloat64(asynUser *pasynUser, epicsFloat64 *value);
-    virtual asynStatus readOctet(asynUser *pasynUser, char *value, size_t maxChars,
-                                        size_t *nActual, int *eomReason);
+//    virtual asynStatus readInt32(asynUser *pasynUser, epicsInt32 *value);
+//    virtual asynStatus readUInt32Digital(asynUser *pasynUser, epicsUInt32 *value, epicsUInt32 mask);
+//    virtual asynStatus writeUInt32Digital(asynUser *pasynUser, epicsUInt32 value, epicsUInt32 mask);
+//    virtual asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
+//    virtual asynStatus readFloat64(asynUser *pasynUser, epicsFloat64 *value);
+//    virtual asynStatus readOctet(asynUser *pasynUser, char *value, size_t maxChars,
+//                                        size_t *nActual, int *eomReason);
 	void report(FILE *fp, int details);
 	/* These are new methods */
 	// Should be private, but are called from C so must be public
@@ -118,6 +148,9 @@ protected:
 	int LTStartStop;
 	int LTWriteEEPROM;
 	int LTClearEEPROM;
+	int LTSend;
+	int LTRetrieve;
+
 	int LTMode;
 	int LTModeFlags;
 	int LTFilterA;
@@ -129,6 +162,8 @@ protected:
 	int LTSampleRate;
 	int LTTcCoolGain;
 	int LTTcHeatGain;
+	int LTDeadBand;
+	int LTHysteresis;
 	int LTTRef;
 	int LTTcOutput;
 	int LTInputVoltage;
@@ -183,12 +218,22 @@ private:
     asynStatus readDataFloat(unsigned int reg, epicsFloat64 *val);
     asynStatus readDataInt(unsigned int reg, epicsInt32 *val);
     asynStatus readString(const char *cmd, char *val, unsigned int *len);
+    asynStatus controlLogging(const bool active);
 
-	char *mSerialPort;
+//	char *mSerialPort;
 	asynUser *mAsynUserCommand;
 	epicsEventId mDataEvent;
 	unsigned int mAcquiringData;
 	unsigned int mFinish;
+
+    asynStatus createRegisterParam(const int num, const int mask, const char *name, asynParamType type, int *index);
+    asynStatus findRegister(const int num, struct LTPR59Register **reg);
+    asynStatus readAllRegisterParams(void);
+    asynStatus writeAllRegisterParams(void);
+//    asynStatus readAll(void);
+
+    struct LTPR59Register mRegs[LTPR59_MAX_REGISTERS];
+    int mRegsIndex;
 };
 
 #define NUM_LTPR59_PARAMS ((int)(&LAST_LTPR59_PARAM - &FIRST_LTPR59_PARAM + 1))

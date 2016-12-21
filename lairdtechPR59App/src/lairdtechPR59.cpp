@@ -330,7 +330,7 @@ asynStatus LTPR59::readDataInt(unsigned int reg, epicsInt32 *val) {
 asynStatus LTPR59::readString(const char *cmd, char *val, unsigned int *len) {
 	asynStatus status = asynSuccess;
 
-	status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL, true);
+	status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL);
 	if (status) {
 		return status;
 	}
@@ -352,7 +352,8 @@ asynStatus LTPR59::writeDataFloat(unsigned int reg, const epicsFloat64 val) {
 	if (status) {
 		return status;
 	}
-	status = xfer(LTPR59_REQ_TYPE_WRITE, "$R", reg, buf);
+	/* no additional data is read back apart from echoed request */
+	status = xfer(LTPR59_REQ_TYPE_WRITE, "$R", reg, buf, false);
 
 	return status;
 }
@@ -366,7 +367,8 @@ asynStatus LTPR59::writeDataInt(unsigned int reg, const epicsInt32 val) {
 	if (status) {
 		return status;
 	}
-	status = xfer(LTPR59_REQ_TYPE_WRITE, "$R", reg, buf);
+	/* no additional data is read back apart from echoed request */
+	status = xfer(LTPR59_REQ_TYPE_WRITE, "$R", reg, buf, false);
 
 	return status;
 }
@@ -380,6 +382,7 @@ void LTPR59::dataTask(void) {
 	int n;
 	int iv[20];
 	float fv[20];
+	char buf[LTPR59_MAX_MSG_SZ];
 
 	sleep(2);
 
@@ -405,7 +408,7 @@ void LTPR59::dataTask(void) {
 		// Sanity check that main thread thinks we are acquiring data
 		while (mAcquiringData) {
 			this->unlock();
-			status = serialPortRead(0.3);
+			status = serialPortRead(0.1);
 			this->lock();
 
 			if (status) {
@@ -418,7 +421,9 @@ void LTPR59::dataTask(void) {
 			}
 
 			getIntegerParam(LTLoggingMode, &contLog);
-			if (contLog == 1) {
+			if (contLog == 0) {
+				break;
+			} else if (contLog == 1) {
 				/* $A1
 				 * View Ain Vin F2c T1 T2 T3 Tfet Curr V12 F1c a12 a13 iTc iF1 iF2
 				 * [1 0 311 605 0 1023 1022 1022 691 127 597 0 0 0 0 1023 1023]
@@ -449,6 +454,11 @@ void LTPR59::dataTask(void) {
 					&fv[5], &fv[6], &fv[7], &fv[8], &fv[9]);
 				printf("%s: Parsed %d values..\n", __func__, n);
 				if (n == 13) {
+					sprintf(buf, "%04X %04X", (iv[1] >> 16) & 0xFFFF, (iv[1] & 0xFFFF));
+					setStringParam(LTStatus, buf);
+					printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, (iv[1] >> 16) & 0xFFFF, (iv[1] & 0xFFFF));
+					setUIntDigitalParam(LTStatusAlarm, iv[1] >> 16, 0xFFFF);
+					setUIntDigitalParam(LTStatusError, iv[1], 0xFFFF);
 					setDoubleParam(LTTcOutput, fv[0]);
 					setDoubleParam(LTTemp1, fv[1]);
 					// skip temp2
@@ -460,7 +470,7 @@ void LTPR59::dataTask(void) {
 					setDoubleParam(LTPIDTLPa, fv[8]);
 					setDoubleParam(LTPIDTLPb, fv[9]);
 					/* Do callbacks so higher layers see any changes */
-					callParamCallbacks(0);
+					callParamCallbacks();
 				}
 
 			} else if (contLog == 4) {
@@ -506,7 +516,7 @@ void LTPR59::dataTask(void) {
 		mAcquiringData = 0;
 
 		status = pasynOctetSyncIO->flush(mAsynUserCommand);
-		status = serialPortRead(1.0);
+		status = serialPortRead(0.1);
 
 	} // End of while(1) loop
 
@@ -528,14 +538,7 @@ asynStatus LTPR59::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 	status = setIntegerParam(addr, function, value);
 
 	if (function == LTLoggingMode) {
-		char cmd[4] = {'$', 'A', 0, 0};
-		cmd[2] = '0' + value;
-		status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL, false);
-		if (value > 0) {
-			mAcquiringData = 1;
-		} else {
-			mAcquiringData = 0;
-		}
+		status = controlLogging((bool)value);
 	} else if (function == LTStatusClear) {
 		status = readString("$SC", NULL, NULL);
 	} else if (function == LTStartStop) {
@@ -548,20 +551,14 @@ asynStatus LTPR59::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 		status = readString("$RC", NULL, NULL);
 	} else if (function == LTWriteEEPROM) {
 		status = readString("$RW", NULL, NULL);
+	} else if (function == LTRetrieve) {
+		status = readAllRegisterParams();
+	} else if (function == LTSend) {
+		status = writeAllRegisterParams();
 	}
 
 	/* Do callbacks so higher layers see any changes */
 	callParamCallbacks(addr, addr);
-
-	if (mAcquiringData) {
-		asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-				"%s:%s:, Sending mDataEvent to dataTask ...\n", driverName,
-				__func__);
-		printf("%s:%s:, Sending mDataEvent to dataTask ...\n", driverName,
-				__func__);
-		// Also signal the data readout thread
-		epicsEventSignal(mDataEvent);
-	}
 
 	if (status) {
 		asynPrint(pasynUser, ASYN_TRACE_ERROR,
@@ -576,6 +573,43 @@ asynStatus LTPR59::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 	return status;
 }
 
+asynStatus LTPR59::controlLogging(const bool active) {
+	epicsInt32 contLog = 0;
+	char cmd[4] = {'$', 'A', 0, 0};
+	asynStatus status = asynSuccess;
+
+	/* if active then get the logging mode value and send it to the regulator,
+	 * otherwise logging will be disabled.. */
+	if (active) {
+		getIntegerParam(LTLoggingMode, &contLog);
+		cmd[2] = '0' + contLog;
+	}
+
+	status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL, false);
+	if (contLog > 0) {
+		mAcquiringData = 1;
+	} else {
+		mAcquiringData = 0;
+	}
+
+	if (mAcquiringData) {
+		asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+				"%s:%s:, Sending mDataEvent to dataTask ...\n", driverName,
+				__func__);
+		printf("%s:%s:, Sending mDataEvent to dataTask ...\n", driverName,
+				__func__);
+		// Also signal the data readout thread
+		epicsEventSignal(mDataEvent);
+	}
+
+	/* logging needs to start / finish before we can access the regulator
+	 * with other commands */
+	usleep(300000);
+
+	return status;
+}
+
+#if 0
 asynStatus LTPR59::readInt32(asynUser *pasynUser, epicsInt32 *value) {
 
 	int function = pasynUser->reason;
@@ -785,6 +819,11 @@ asynStatus LTPR59::readFloat64(asynUser *pasynUser, epicsFloat64 *value) {
 		return(status);
 	}
 
+	/* Handle parameters */
+	if (function >= LTMode) {
+
+	}
+
 	if (function == LTTrSetPoint) {
 		status = readDataFloat(0, value);
 	} else if (function == LTTcLimit) {
@@ -921,6 +960,235 @@ asynStatus LTPR59::readOctet(asynUser *pasynUser, char *value, size_t maxChars,
 
 	return status;
 }
+#endif
+
+asynStatus LTPR59::createRegisterParam(const int num, const int mask,
+		const char *name, asynParamType type, int *index) {
+	struct LTPR59Register *reg;
+	asynStatus status = asynSuccess;
+
+	if (mRegsIndex >= LTPR59_MAX_REGISTERS) {
+		return asynError;
+	}
+
+	reg = &mRegs[mRegsIndex];
+
+	status = createParam(name, type, index);
+	if (status) {
+		return status;
+	}
+	reg->param = *index;
+	reg->num = num;
+	reg->mask = mask;
+	reg->type = type;
+	/* registers 99 and above are read-only, with register 9 being exception */
+	if ((reg->num < 99) && (reg->num != 9)) {
+		reg->write = 1;
+	} else {
+		reg->write = 0;
+	}
+
+	mRegsIndex++;
+
+	return asynSuccess;
+}
+
+asynStatus LTPR59::findRegister(const int num, struct LTPR59Register **reg) {
+	struct LTPR59Register *r;
+	int i;
+
+	for (i = 0; i < mRegsIndex; i++) {
+		r = &mRegs[i];
+		if (r->num == num) {
+			*reg = &mRegs[i];
+			return asynSuccess;
+		}
+	}
+
+	return asynError;
+}
+
+asynStatus LTPR59::readAllRegisterParams(void) {
+	struct LTPR59Register *reg;
+	int i;
+	unsigned int len, n;
+	char value[LTPR59_MAX_MSG_SZ];
+	unsigned int alarms, errors;
+	asynStatus status = asynSuccess;
+
+	status = controlLogging(false);
+	if (status) {
+		return asynError;
+	}
+
+	len = LTPR59_MAX_MSG_SZ;
+	status = readString("$LI", value, &len);
+	value[len] = 0;
+	status = setStringParam(LTID, value);
+
+	len = LTPR59_MAX_MSG_SZ;
+	status = readString("$v", value, &len);
+	value[len] = 0;
+	status = setStringParam(LTVersion, value);
+
+	len = LTPR59_MAX_MSG_SZ;
+	status = readString("$S", value, &len);
+	value[len] = 0;
+
+	n = sscanf(value, "%X %X %*s", &alarms, &errors);
+	if (n != 2) {
+		status = asynError;
+	} else {
+		printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, alarms, errors);
+		sprintf(value, "%04X %04X", alarms, errors);
+		status = setStringParam(LTStatus, value);
+		status = setUIntDigitalParam(LTStatusAlarm, alarms, 0xFFFF);
+		status = setUIntDigitalParam(LTStatusError, errors, 0xFFFF);
+	}
+
+	for (i = 0; i < mRegsIndex; i++) {
+		reg = &mRegs[i];
+		/* this PV does not have a register to be read */
+		if (reg->num == -1) {
+			continue;
+		}
+
+		if (reg->type == asynParamInt32) {
+			epicsInt32 value;
+			status = readDataInt(reg->num, &value);
+			if (status == asynSuccess) {
+				status = setIntegerParam(reg->param, value);
+			}
+		} else if (reg->type == asynParamFloat64) {
+			epicsFloat64 value;
+			status = readDataFloat(reg->num, &value);
+			if (status == asynSuccess) {
+				status = setDoubleParam(reg->param, value);
+			}
+		} else if (reg->type == asynParamUInt32Digital) {
+			epicsUInt32 value;
+			status = readDataInt(reg->num, (epicsInt32 *)&value);
+			if (reg->param == LTTemp1Mode) {
+				/* Temp1 has zoom mode */
+				value &= ~0x08;
+			}
+			if (status == asynSuccess) {
+				status = setUIntDigitalParam(reg->param, value, reg->mask);
+			}
+		} else {
+			printf("%s::%s: Unsupported type %d for index %d!\n",
+					driverName, __func__, reg->type, reg->param);
+		}
+		if (status) {
+			printf("%s::%s: Failed to read from register %d\n",
+					driverName, __func__, reg->num);
+		}
+
+		/* let the regulator breathe */
+		usleep(10000);
+	}
+
+	status = controlLogging(true);
+	if (status) {
+		return asynError;
+	}
+
+	return status;
+}
+
+asynStatus LTPR59::writeAllRegisterParams(void) {
+	struct LTPR59Register *reg, *modeReg;
+	int i;
+	epicsUInt32 bits;
+	epicsInt32 mode = 0;
+	asynStatus status = asynSuccess;
+
+	status = controlLogging(false);
+	if (status) {
+		return asynError;
+	}
+
+	status = findRegister(13, &modeReg);
+	if (status) {
+		return asynError;
+	}
+	getUIntDigitalParam(LTMode, &bits, 0xF);
+	mode = bits;
+	getUIntDigitalParam(LTModeFlags, &bits, 0x3F0);
+	mode |= bits;
+	getUIntDigitalParam(LTFilterA, &bits, 0x3000);
+	mode |= bits;
+	getUIntDigitalParam(LTFilterB, &bits, 0xC000);
+	mode |= bits;
+
+	/* first set mode WITH 'download parameters' flag! */
+	mode |= 0x40;
+	status = writeDataInt(modeReg->num, mode);
+
+	for (i = 0; i < mRegsIndex; i++) {
+		reg = &mRegs[i];
+		/* this PV does not have a register to be written */
+		if (reg->num == -1) {
+			continue;
+		}
+		/* this register is not writable */
+		if (reg->write == 0) {
+			continue;
+		}
+		/* this PV should not be written to a register */
+		if (reg->param == LTMode ||
+			reg->param == LTModeFlags ||
+			reg->param == LTFilterA ||
+			reg->param == LTFilterB) {
+			continue;
+		}
+
+		if (reg->type == asynParamInt32) {
+			epicsInt32 value;
+			status = getIntegerParam(reg->param, &value);
+			if (status == asynSuccess) {
+				status = writeDataInt(reg->num, value);
+			}
+		} else if (reg->type == asynParamFloat64) {
+			epicsFloat64 value;
+			status = getDoubleParam(reg->param, &value);
+			if (status == asynSuccess) {
+				status = writeDataFloat(reg->num, value);
+			}
+		} else if (reg->type == asynParamUInt32Digital) {
+			epicsUInt32 value;
+			status = getUIntDigitalParam(reg->param, &value, reg->mask);
+			if (reg->param == LTTemp1Mode) {
+				/* Temp1 has zoom mode */
+				value |= 0x08;
+			}
+			if (status == asynSuccess) {
+				status = writeDataInt(reg->num, (epicsInt32)value);
+			}
+		} else {
+			printf("%s::%s: Unsupported type %d for index %d!\n",
+					driverName, __func__, reg->type, reg->param);
+		}
+		if (status) {
+			printf("%s::%s: Failed to write to register %d\n",
+					driverName, __func__, reg->num);
+		}
+
+		/* let the regulator breathe */
+		usleep(10000);
+	}
+
+	/* set mode again WITHOUT 'download parameters' flag! */
+	mode &= ~0x40;
+	status = writeDataInt(modeReg->num, mode);
+
+	status = controlLogging(true);
+	if (status) {
+		return asynError;
+	}
+
+	return status;
+}
 
 void LTPR59::report(FILE *fp, int details) {
 
@@ -930,7 +1198,6 @@ void LTPR59::report(FILE *fp, int details) {
 	/* Invoke the base class method */
 	asynPortDriver::report(fp, details);
 }
-
 
 /** Constructor for the LTPR59 class.
   * Calls constructor for the asynPortDriver base class.
@@ -950,12 +1217,12 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 {
 	int status = asynSuccess;
 
-	mSerialPort = strdup(serialPort);
-	printf("%s: Serial port %s\n", __func__, mSerialPort);
+	printf("%s::%s: drvAsynSeriaPort '%s'\n", driverName, __func__, serialPort);
 
 	/* Create an EPICS exit handler */
 	epicsAtExit(exitHandler, this);
 
+	/* General commands */
 	createParam(LTStatusMessageString,		asynParamOctet,			&LTStatusMessage);
 	createParam(LTIDString,					asynParamOctet,			&LTID);
 	createParam(LTVersionString,			asynParamOctet,			&LTVersion);
@@ -967,51 +1234,61 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	createParam(LTStartStopString,			asynParamInt32,			&LTStartStop);
 	createParam(LTWriteEEPROMString,		asynParamInt32,			&LTWriteEEPROM);
 	createParam(LTClearEEPROMString,		asynParamInt32,			&LTClearEEPROM);
-	createParam(LTModeString,				asynParamUInt32Digital,	&LTMode);
-	createParam(LTModeFlagsString,			asynParamUInt32Digital,	&LTModeFlags);
-	createParam(LTFilterAString,			asynParamUInt32Digital,	&LTFilterA);
-	createParam(LTFilterBString,			asynParamUInt32Digital,	&LTFilterB);
-	createParam(LTEventCounterString,		asynParamInt32,			&LTEventCounter);
-	createParam(LTTrSetPointString,			asynParamFloat64,		&LTTrSetPoint);
-	createParam(LTTcLimitString,			asynParamFloat64,		&LTTcLimit);
-	createParam(LTTcDeadBandString,			asynParamFloat64,		&LTTcDeadBand);
-	createParam(LTSampleRateString,			asynParamInt32,			&LTSampleRate);
-	createParam(LTTcCoolGainString,			asynParamFloat64,		&LTTcCoolGain);
-	createParam(LTTcHeatGainString,			asynParamFloat64,		&LTTcHeatGain);
-	createParam(LTTRefString,				asynParamFloat64,		&LTTRef);
-	createParam(LTTcOutputString,			asynParamFloat64,		&LTTcOutput);
-	createParam(LTInputVoltageString,		asynParamFloat64,		&LTInputVoltage);
-	createParam(LTInternal12VString,		asynParamFloat64,		&LTInternal12V);
-	createParam(LTMainCurrentString,		asynParamFloat64,		&LTMainCurrent);
+	createParam(LTSendString,				asynParamInt32,			&LTSend);
+	createParam(LTRetrieveString,			asynParamInt32,			&LTRetrieve);
 
-	createParam(LTTemp1String,				asynParamFloat64,		&LTTemp1);
-	createParam(LTTemp1ModeString,			asynParamUInt32Digital,	&LTTemp1Mode);
-	createParam(LTTemp1GainString,			asynParamFloat64,		&LTTemp1Gain);
-	createParam(LTTemp1OffsetString,		asynParamFloat64,		&LTTemp1Offset);
-	createParam(LTTemp1CoeffAString,		asynParamFloat64,		&LTTemp1CoeffA);
-	createParam(LTTemp1CoeffBString,		asynParamFloat64,		&LTTemp1CoeffB);
-	createParam(LTTemp1CoeffCString,		asynParamFloat64,		&LTTemp1CoeffC);
-	createParam(LTTemp1ResHighString,		asynParamFloat64,		&LTTemp1ResHigh);
-	createParam(LTTemp1ResMedString,		asynParamFloat64,		&LTTemp1ResMed);
-	createParam(LTTemp1ResLowString,		asynParamFloat64,		&LTTemp1ResLow);
-	createParam(LTTemp1TempHighString,		asynParamFloat64,		&LTTemp1TempHigh);
-	createParam(LTTemp1TempMedString,		asynParamFloat64,		&LTTemp1TempMed);
-	createParam(LTTemp1TempLowString,		asynParamFloat64,		&LTTemp1TempLow);
+	/* Regulator parameters */
+	mRegsIndex = 0;
+	createRegisterParam(13,		0xF, 	LTModeString,				asynParamUInt32Digital,	&LTMode);
+	createRegisterParam(13,		0x3F0, 	LTModeFlagsString,			asynParamUInt32Digital,	&LTModeFlags);
+	createRegisterParam(13,		0x3000,	LTFilterAString,			asynParamUInt32Digital,	&LTFilterA);
+	createRegisterParam(13,		0xC000,	LTFilterBString,			asynParamUInt32Digital,	&LTFilterB);
+	createRegisterParam(99,		0x0, 	LTEventCounterString,		asynParamInt32,			&LTEventCounter);
+	createRegisterParam(0,		0x0, 	LTTrSetPointString,			asynParamFloat64,		&LTTrSetPoint);
+	createRegisterParam(6,		0x0, 	LTTcLimitString,			asynParamFloat64,		&LTTcLimit);
+	createRegisterParam(7,		0x0, 	LTTcDeadBandString,			asynParamFloat64,		&LTTcDeadBand);
+	createRegisterParam(9,		0x0, 	LTSampleRateString,			asynParamInt32,			&LTSampleRate);
+	createRegisterParam(10,		0x0, 	LTTcCoolGainString,			asynParamFloat64,		&LTTcCoolGain);
+	createRegisterParam(11,		0x0, 	LTTcHeatGainString,			asynParamFloat64,		&LTTcHeatGain);
+	createRegisterParam(14,		0x0, 	LTDeadBandString,			asynParamFloat64,		&LTDeadBand);
+	createRegisterParam(15,		0x0, 	LTHysteresisString,			asynParamFloat64,		&LTHysteresis);
+	createRegisterParam(105,	0x0, 	LTTRefString,				asynParamFloat64,		&LTTRef);
+	createRegisterParam(106,	0x0, 	LTTcOutputString,			asynParamFloat64,		&LTTcOutput);
+	createRegisterParam(150,	0x0, 	LTInputVoltageString,		asynParamFloat64,		&LTInputVoltage);
+	createRegisterParam(151,	0x0, 	LTInternal12VString,		asynParamFloat64,		&LTInternal12V);
+	createRegisterParam(152,	0x0, 	LTMainCurrentString,		asynParamFloat64,		&LTMainCurrent);
 
-	createParam(LTPIDKpString,				asynParamFloat64,		&LTPIDKp);
-	createParam(LTPIDKiString,				asynParamFloat64,		&LTPIDKi);
-	createParam(LTPIDKdString,				asynParamFloat64,		&LTPIDKd);
-	createParam(LTPIDKLPaString,			asynParamFloat64,		&LTPIDKLPa);
-	createParam(LTPIDKLPbString,			asynParamFloat64,		&LTPIDKLPb);
-	createParam(LTPIDILimitString,			asynParamFloat64,		&LTPIDILimit);
-	createParam(LTPIDDecayString,			asynParamFloat64,		&LTPIDDecay);
-	createParam(LTPIDTaString,				asynParamFloat64,		&LTPIDTa);
-	createParam(LTPIDTeString,				asynParamFloat64,		&LTPIDTe);
-	createParam(LTPIDTpString,				asynParamFloat64,		&LTPIDTp);
-	createParam(LTPIDTiString,				asynParamFloat64,		&LTPIDTi);
-	createParam(LTPIDTdString,				asynParamFloat64,		&LTPIDTd);
-	createParam(LTPIDTLPaString,			asynParamFloat64,		&LTPIDTLPa);
-	createParam(LTPIDTLPbString,			asynParamFloat64,		&LTPIDTLPb);
+	/* Temperature 1 parameters */
+	createRegisterParam(100,	0x0, 	LTTemp1String,				asynParamFloat64,		&LTTemp1);
+	createRegisterParam(55,		0x1F, 	LTTemp1ModeString,			asynParamUInt32Digital,	&LTTemp1Mode);
+	createRegisterParam(35,		0x0, 	LTTemp1GainString,			asynParamFloat64,		&LTTemp1Gain);
+	createRegisterParam(36,		0x0, 	LTTemp1OffsetString,		asynParamFloat64,		&LTTemp1Offset);
+	createRegisterParam(59,		0x0, 	LTTemp1CoeffAString,		asynParamFloat64,		&LTTemp1CoeffA);
+	createRegisterParam(60,		0x0, 	LTTemp1CoeffBString,		asynParamFloat64,		&LTTemp1CoeffB);
+	createRegisterParam(61,		0x0, 	LTTemp1CoeffCString,		asynParamFloat64,		&LTTemp1CoeffC);
+	createRegisterParam(79,		0x0, 	LTTemp1ResHighString,		asynParamFloat64,		&LTTemp1ResHigh);
+	createRegisterParam(80,		0x0, 	LTTemp1ResMedString,		asynParamFloat64,		&LTTemp1ResMed);
+	createRegisterParam(81,		0x0, 	LTTemp1ResLowString,		asynParamFloat64,		&LTTemp1ResLow);
+	createRegisterParam(-1,		0x0, 	LTTemp1TempHighString,		asynParamFloat64,		&LTTemp1TempHigh);
+	createRegisterParam(-1,		0x0, 	LTTemp1TempMedString,		asynParamFloat64,		&LTTemp1TempMed);
+	createRegisterParam(-1,		0x0, 	LTTemp1TempLowString,		asynParamFloat64,		&LTTemp1TempLow);
+
+	/* PID parameters */
+	createRegisterParam(1,		0x0, 	LTPIDKpString,				asynParamFloat64,		&LTPIDKp);
+	createRegisterParam(2,		0x0, 	LTPIDKiString,				asynParamFloat64,		&LTPIDKi);
+	createRegisterParam(3,		0x0, 	LTPIDKdString,				asynParamFloat64,		&LTPIDKd);
+	createRegisterParam(4,		0x0, 	LTPIDKLPaString,			asynParamFloat64,		&LTPIDKLPa);
+	createRegisterParam(5,		0x0, 	LTPIDKLPbString,			asynParamFloat64,		&LTPIDKLPb);
+	createRegisterParam(8,		0x0, 	LTPIDILimitString,			asynParamFloat64,		&LTPIDILimit);
+	createRegisterParam(12,		0x0, 	LTPIDDecayString,			asynParamFloat64,		&LTPIDDecay);
+	createRegisterParam(110,	0x0, 	LTPIDTaString,				asynParamFloat64,		&LTPIDTa);
+	createRegisterParam(111,	0x0, 	LTPIDTeString,				asynParamFloat64,		&LTPIDTe);
+	createRegisterParam(112,	0x0, 	LTPIDTpString,				asynParamFloat64,		&LTPIDTp);
+	createRegisterParam(113,	0x0, 	LTPIDTiString,				asynParamFloat64,		&LTPIDTi);
+	createRegisterParam(114,	0x0, 	LTPIDTdString,				asynParamFloat64,		&LTPIDTd);
+	createRegisterParam(117,	0x0, 	LTPIDTLPaString,			asynParamFloat64,		&LTPIDTLPa);
+	createRegisterParam(118,	0x0, 	LTPIDTLPbString,			asynParamFloat64,		&LTPIDTLPb);
+	printf("%s::%s: Created %d registers..\n", driverName, __func__, mRegsIndex);
 
 	setStringParam(LTStatusMessage,			"");
 	setStringParam(LTID,					"");
@@ -1023,20 +1300,19 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	mFinish = 0;
 
 	/* Connect to desired IP port */
-	status = pasynOctetSyncIO->connect(mSerialPort, 0, &mAsynUserCommand, NULL);
+	status = pasynOctetSyncIO->connect(serialPort, 0, &mAsynUserCommand, NULL);
 	if (status) {
 		printf("%s:%s: pasynOctetSyncIO->connect failure\n", driverName, __func__);
-		printf("%s: init FAIL!\n", __func__);
+		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
 
 	/* stop continuous logging if in progress! */
-	char cmd[3] = {'$', 'A', 0};
-	status = xfer(LTPR59_REQ_TYPE_CMD, cmd, 0, NULL, false);
+	status = controlLogging(false);
 	if (status) {
 		printf("%s:%s: device not present?\n",
 				driverName, __func__);
-		printf("%s: init FAIL!\n", __func__);
+		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
 
@@ -1045,7 +1321,7 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	if (!this->mDataEvent) {
 		printf("%s:%s epicsEventCreate failure for data event\n",
 				driverName, __func__);
-		printf("%s: init FAIL!\n", __func__);
+		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
 
@@ -1057,11 +1333,11 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	if (status) {
 		printf("%s:%s: epicsThreadCreate failure for data task\n",
 				driverName, __func__);
-		printf("%s: init FAIL!\n", __func__);
+		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
 
-	printf("%s: init complete OK!\n", __func__);
+	printf("%s:%s: init complete OK!\n", driverName, __func__);
 }
 
 LTPR59::~LTPR59() {
