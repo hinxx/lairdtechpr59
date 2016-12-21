@@ -42,8 +42,38 @@ LTPR59Configure($(PORT), $(SERIAL_PORT))
 dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_main.template","P=$(PORT):,R=,PORT=$(PORT),SERIAL_PORT=$(SERIAL_PORT),ADDR=0,TIMEOUT=1")
 dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_pid.template","P=$(PORT):,R=,PORT=$(PORT),ADDR=0,TIMEOUT=1")
 dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_temp.template","P=$(PORT):,R=,T=1,PORT=$(PORT),ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(LAIRDTECHPR59)/db/lairdtechPR59_temp.template","P=$(PORT):,R=,T=4,PORT=$(PORT),ADDR=0,TIMEOUT=1")
 # TODO: Add support for other temperature sensors
 dbLoadRecords("$(ASYN)/db/asynRecord.db","P=$(PORT):,R=asyn,PORT=$(PORT),ADDR=0,OMAX=100,IMAX=100")
 
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
+
+# Temperature sensor 1 settings
+# We have PT1000 sensor, only coefficients A, B and resistance high are used
+# Values from LT_Interface tool for 'PT1000'
+dbpf $(PORT):Temp1Mode "PT"
+dbpf $(PORT):Temp1ResHigh 1000
+dbpf $(PORT):Temp1ResMed 0
+dbpf $(PORT):Temp1ResLow 0
+dbpf $(PORT):Temp1CoeffA 3.90799996e-03
+dbpf $(PORT):Temp1CoeffB -5.77499975e-07
+dbpf $(PORT):Temp1CoeffC 0
+
+# Temperature sensor 4 settings
+# This is internal sensor, NTC type
+# Values from LT_Interface tool for 'RH16-10K'
+dbpf $(PORT):Temp4Mode "NTC"
+dbpf $(PORT):Temp4ResHigh 2965.1389
+dbpf $(PORT):Temp4ResMed 28836.7891
+dbpf $(PORT):Temp4ResLow 78219.9922
+dbpf $(PORT):Temp4CoeffA 6.84353872e-04
+dbpf $(PORT):Temp4CoeffB 2.89854885e-04
+dbpf $(PORT):Temp4CoeffC 4.39709385e-13
+
+# Regulator settings
+dbpf $(PORT):Mode "P"
+dbpf $(PORT):ModeFlags "None"
+dbpf $(PORT):FilterA "Off"
+dbpf $(PORT):FilterB "Off"
+dbpf $(PORT):StartStop "Stop"

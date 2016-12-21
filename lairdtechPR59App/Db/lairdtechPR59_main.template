@@ -30,7 +30,6 @@ record(waveform, "$(P)$(R)ID_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_ID")
     field(FTVL, "CHAR")
     field(NELM, "512")
-#    field(PINI, "YES")
     field(SCAN, "I/O Intr")
 }
 
@@ -41,27 +40,7 @@ record(waveform, "$(P)$(R)Version_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_VERSION")
     field(FTVL, "CHAR")
     field(NELM, "512")
-#    field(PINI, "YES")
     field(SCAN, "I/O Intr")
-}
-
-# command: $S - status flags (alarms and errors)
-record(waveform, "$(P)$(R)Status_RBV")
-{
-    field(DTYP, "asynOctetRead")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_STATUS")
-    field(FTVL, "CHAR")
-    field(NELM, "512")
-#    field(PINI, "YES")
-    field(SCAN, "I/O Intr")
-}
-
-# clear status flag
-record(bo, "$(P)$(R)StatusClear")
-{
-    field(DTYP, "asynInt32")
-    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_STATUS_CLEAR")
-    field(FLNK, "$(P)$(R)Status_RBV")
 }
 
 # clear/set RUN flag
@@ -119,7 +98,6 @@ record(mbbo, "$(P)$(R)LoggingMode")
     field(EIST, "Runtime LOGG")
     field(EIVL, "8")
     field(VAL,  "0")
-#    field(PINI, "YES")
 }
 record(mbbi, "$(P)$(R)LoggingMode_RBV")
 {
@@ -144,7 +122,6 @@ record(mbbi, "$(P)$(R)LoggingMode_RBV")
     field(EIST, "Runtime LOGG")
     field(EIVL, "8")
     field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
 
 # send register parameters
@@ -163,267 +140,286 @@ record(bo, "$(P)$(R)Retrieve")
 }
 
 ##############################################################################
-# status alarm bits
+# status
 ##############################################################################
-record(bi, "$(P)$(R)StatusAlarmTemp1TooHigh_RBV") {
+# command: $SC - clear status flag
+record(bo, "$(P)$(R)StatusClear")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_STATUS_CLEAR")
+    field(FLNK, "$(P)$(R)Status_RBV")
+}
+
+# command: $S - status flags (alarms and errors)
+record(waveform, "$(P)$(R)Status_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_STATUS")
+    field(FTVL, "CHAR")
+    field(NELM, "512")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(P)$(R)StatusFanout1 NMS PP")
+}
+
+record(fanout, "$(P)$(R)StatusFanout1") {
+    field(LNK1, "$(P)$(R)StatusTemp1TooHigh_RBV")
+    field(LNK2, "$(P)$(R)StatusTemp1TooLow_RBV")
+    field(LNK3, "$(P)$(R)StatusTemp1Short_RBV")
+    field(LNK4, "$(P)$(R)StatusTemp1Missing_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout2")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout2") {
+    field(LNK1, "$(P)$(R)StatusTemp2TooHigh_RBV")
+    field(LNK2, "$(P)$(R)StatusTemp2TooLow_RBV")
+    field(LNK3, "$(P)$(R)StatusTemp2Short_RBV")
+    field(LNK4, "$(P)$(R)StatusTemp2Missing_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout3")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout3") {
+    field(LNK1, "$(P)$(R)StatusTemp3TooHigh_RBV")
+    field(LNK2, "$(P)$(R)StatusTemp3TooLow_RBV")
+    field(LNK3, "$(P)$(R)StatusTemp3Short_RBV")
+    field(LNK4, "$(P)$(R)StatusTemp3Missing_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout4")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout4") {
+    field(LNK1, "$(P)$(R)StatusTemp4TooHigh_RBV")
+    field(LNK2, "$(P)$(R)StatusTemp4TooLow_RBV")
+    field(LNK3, "$(P)$(R)StatusTemp4Short_RBV")
+    field(LNK4, "$(P)$(R)StatusTemp4Missing_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout5")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout5") {
+    field(LNK1, "$(P)$(R)StatusStartupDelay_RBV")
+    field(LNK2, "$(P)$(R)StatusDownloadError_RBV")
+    field(LNK3, "$(P)$(R)StatusCritial_RBV")
+    field(LNK4, "$(P)$(R)StatusRegulatorOverload_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout6")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout6") {
+    field(LNK1, "$(P)$(R)StatusHighVoltage_RBV")
+    field(LNK2, "$(P)$(R)StatusLowVoltage_RBV")
+    field(LNK3, "$(P)$(R)StatusHigh12V_RBV")
+    field(LNK4, "$(P)$(R)StatusLow12V_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout7")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout7") {
+    field(LNK1, "$(P)$(R)StatusCurrentHigh_RBV")
+    field(LNK2, "$(P)$(R)StatusCurrentLow_RBV")
+    field(LNK3, "$(P)$(R)StatusFan1High_RBV")
+    field(LNK4, "$(P)$(R)StatusFan1Low_RBV")
+    field(LNK5, "$(P)$(R)StatusFanout8")
+    field(SELM, "All")
+}
+record(fanout, "$(P)$(R)StatusFanout8") {
+    field(LNK1, "$(P)$(R)StatusFan2High_RBV")
+    field(LNK2, "$(P)$(R)StatusFan2Low_RBV")
+    field(LNK3, "$(P)$(R)StatusSensorAlarmStop_RBV")
+    field(LNK4, "$(P)$(R)StatusSensorAlarmIndicator_RBV")
+    field(SELM, "All")
+}
+
+record(bi, "$(P)$(R)StatusTemp1TooHigh_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x1,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp1TooLow_RBV") {
+record(bi, "$(P)$(R)StatusTemp1TooLow_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x2,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp1Short_RBV") {
+record(bi, "$(P)$(R)StatusTemp1Short_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x4,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp1Missing_RBV") {
+record(bi, "$(P)$(R)StatusTemp1Missing_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x8,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp2TooHigh_RBV") {
+record(bi, "$(P)$(R)StatusTemp2TooHigh_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x10,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp2TooLow_RBV") {
+record(bi, "$(P)$(R)StatusTemp2TooLow_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x20,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp2Short_RBV") {
+record(bi, "$(P)$(R)StatusTemp2Short_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x40,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp2Missing_RBV") {
+record(bi, "$(P)$(R)StatusTemp2Missing_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x80,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp3TooHigh_RBV") {
+record(bi, "$(P)$(R)StatusTemp3TooHigh_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x100,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp3TooLow_RBV") {
+record(bi, "$(P)$(R)StatusTemp3TooLow_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x200,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp3Short_RBV") {
+record(bi, "$(P)$(R)StatusTemp3Short_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x400,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp3Missing_RBV") {
+record(bi, "$(P)$(R)StatusTemp3Missing_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x800,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp4TooHigh_RBV") {
+record(bi, "$(P)$(R)StatusTemp4TooHigh_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x1000,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp4TooLow_RBV") {
+record(bi, "$(P)$(R)StatusTemp4TooLow_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x2000,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp4Short_RBV") {
+record(bi, "$(P)$(R)StatusTemp4Short_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x4000,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusAlarmTemp4Missing_RBV") {
+record(bi, "$(P)$(R)StatusTemp4Missing_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x8000,$(TIMEOUT))LT_STATUS_ALARM")
     field(ZNAM, "OK")
     field(ONAM, "ALARM")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
 
 ##############################################################################
 # status error bits
 ##############################################################################
-record(bi, "$(P)$(R)StatusErrorStartupDelay_RBV") {
+record(bi, "$(P)$(R)StatusStartupDelay_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x1,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorDownloadError_RBV") {
+record(bi, "$(P)$(R)StatusDownloadError_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x2,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorCritial_RBV") {
+record(bi, "$(P)$(R)StatusCritial_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x4,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorRegulatorOverload_RBV") {
+record(bi, "$(P)$(R)StatusRegulatorOverload_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x8,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorHighVoltage_RBV") {
+record(bi, "$(P)$(R)StatusHighVoltage_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x10,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorLowVoltage_RBV") {
+record(bi, "$(P)$(R)StatusLowVoltage_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x20,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorHigh12V_RBV") {
+record(bi, "$(P)$(R)StatusHigh12V_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x40,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorLow12V_RBV") {
+record(bi, "$(P)$(R)StatusLow12V_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x80,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorCurrentHigh_RBV") {
+record(bi, "$(P)$(R)StatusCurrentHigh_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x100,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorCurrentLow_RBV") {
+record(bi, "$(P)$(R)StatusCurrentLow_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x200,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorFan1High_RBV") {
+record(bi, "$(P)$(R)StatusFan1High_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x400,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorFan1Low_RBV") {
+record(bi, "$(P)$(R)StatusFan1Low_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x800,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorFan2High_RBV") {
+record(bi, "$(P)$(R)StatusFan2High_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x1000,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorFan2Low_RBV") {
+record(bi, "$(P)$(R)StatusFan2Low_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x2000,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorSensorAlarmStop_RBV") {
+record(bi, "$(P)$(R)StatusSensorAlarmStop_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x4000,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
-record(bi, "$(P)$(R)StatusErrorSensorAlarmIndicator_RBV") {
+record(bi, "$(P)$(R)StatusSensorAlarmIndicator_RBV") {
     field(DTYP, "asynUInt32Digital")
     field(INP,  "@asynMask($(PORT),$(ADDR),0x8000,$(TIMEOUT))LT_STATUS_ERROR")
     field(ZNAM, "OK")
     field(ONAM, "ERROR")
-    field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
 
 ##############################################################################
@@ -448,6 +444,7 @@ record(mbbo, "$(P)$(R)Mode")
     field(FVVL, "5")
     field(SXST, "PID")
     field(SXVL, "6")
+    field(VAL,  "0")
 }
 record(mbbi, "$(P)$(R)Mode_RBV")
 {
@@ -487,6 +484,7 @@ record(mbbo, "$(P)$(R)ModeFlags")
     field(FVVL, "16")
     field(SXST, "InvertOutput")
     field(SXVL, "32")
+    field(VAL,  "0")
 }
 record(mbbi, "$(P)$(R)ModeFlags_RBV")
 {
@@ -520,6 +518,7 @@ record(mbbo, "$(P)$(R)FilterA")
     field(TWVL, "2")
     field(THST, "Lead/lag")
     field(THVL, "3")
+    field(VAL,  "0")
 }
 record(mbbi, "$(P)$(R)FilterA_RBV")
 {
@@ -547,6 +546,7 @@ record(mbbo, "$(P)$(R)FilterB")
     field(TWVL, "2")
     field(THST, "Lead/lag")
     field(THVL, "3")
+    field(VAL,  "0")
 }
 record(mbbi, "$(P)$(R)FilterB_RBV")
 {
@@ -570,6 +570,7 @@ record(ao, "$(P)$(R)TrSetPoint")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TR_SET_POINT")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "20.0")
 }
 record(ai, "$(P)$(R)TrSetPoint_RBV")
 {
@@ -577,7 +578,6 @@ record(ai, "$(P)$(R)TrSetPoint_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TR_SET_POINT")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 6
@@ -587,6 +587,7 @@ record(ao, "$(P)$(R)TcLimit")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_LIMIT")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "100.0")
 }
 record(ai, "$(P)$(R)TcLimit_RBV")
 {
@@ -594,7 +595,6 @@ record(ai, "$(P)$(R)TcLimit_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_LIMIT")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 7
@@ -604,6 +604,7 @@ record(ao, "$(P)$(R)TcDeadBand")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_DEADBAND")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "3.0")
 }
 record(ai, "$(P)$(R)TcDeadBand_RBV")
 {
@@ -611,7 +612,6 @@ record(ai, "$(P)$(R)TcDeadBand_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_DEADBAND")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 9
@@ -620,7 +620,6 @@ record(longin, "$(P)$(R)SampleRate_RBV")
     field(DTYP, "asynInt32")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_SAMPLE_RATE")
     field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
 
 # register 10
@@ -630,7 +629,7 @@ record(ao, "$(P)$(R)TcCoolGain")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_COOL_GAIN")
     field(SCAN, "Passive")
     field(PREC, "4")
-#    field(PINI, "YES")
+    field(VAL,  "1.0")
 }
 record(ai, "$(P)$(R)TcCoolGain_RBV")
 {
@@ -647,6 +646,7 @@ record(ao, "$(P)$(R)TcHeatGain")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_HEAT_GAIN")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "1.0")
 }
 record(ai, "$(P)$(R)TcHeatGain_RBV")
 {
@@ -654,41 +654,40 @@ record(ai, "$(P)$(R)TcHeatGain_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_HEAT_GAIN")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 14
-record(ao, "$(P)$(R)DeadBand")
+record(ao, "$(P)$(R)AlgoDeadBand")
 {
     field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_DEAD_BAND")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_ALGO_DEAD_BAND")
     field(SCAN, "Passive")
     field(PREC, "4")
 }
-record(ai, "$(P)$(R)DeadBand_RBV")
+record(ai, "$(P)$(R)AlgoDeadBand_RBV")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_DEAD_BAND")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_ALGO_DEAD_BAND")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
+    field(VAL,  "5.0")
 }
 
 # register 15
 record(ao, "$(P)$(R)Hysteresis")
 {
     field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_HYSTERESIS")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_ALGO_HYSTERESIS")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "5.0")
 }
 record(ai, "$(P)$(R)Hysteresis_RBV")
 {
     field(DTYP, "asynFloat64")
-    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_HYSTERESIS")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_ALGO_HYSTERESIS")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 99
@@ -697,7 +696,6 @@ record(longin, "$(P)$(R)EventCounter_RBV")
     field(DTYP, "asynInt32")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_EVENT_COUNTER")
     field(SCAN, "I/O Intr")
-#    field(PINI, "YES")
 }
 
 # register 105
@@ -707,7 +705,6 @@ record(ai, "$(P)$(R)TRef_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TREF")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 106
@@ -717,7 +714,6 @@ record(ai, "$(P)$(R)TcOutput_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TC_OUTPUT")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 150
@@ -727,7 +723,6 @@ record(ai, "$(P)$(R)InputVoltage_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_INPUT_VOLTAGE")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 151
@@ -737,7 +732,6 @@ record(ai, "$(P)$(R)Internal12V_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_INTERNAL_VOLTAGE")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }
 
 # register 152
@@ -747,5 +741,4 @@ record(ai, "$(P)$(R)MainCurrent_RBV")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_MAIN_CURRENT")
     field(SCAN, "I/O Intr")
     field(PREC, "4")
-#    field(PINI, "YES")
 }

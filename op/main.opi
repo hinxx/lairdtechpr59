@@ -926,60 +926,6 @@ $(pv_value)</tooltip>
       <opifont.name fontName="Noto Sans" height="9" style="0">Default</opifont.name>
     </font>
   </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <toggle_button>false</toggle_button>
-    <border_style>0</border_style>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <alarm_pulsing>false</alarm_pulsing>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <push_action_index>0</push_action_index>
-    <rules />
-    <enabled>true</enabled>
-    <wuid>-2f214fc:158cf0e90f9:-7ae4</wuid>
-    <pv_value />
-    <text>Refresh</text>
-    <scripts />
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <height>20</height>
-    <border_width>1</border_width>
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <image></image>
-    <visible>true</visible>
-    <pv_name>$(P)$(R)Tref_RBV</pv_name>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <widget_type>Action Button</widget_type>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <width>175</width>
-    <x>618</x>
-    <name>Action Button_17</name>
-    <y>-133</y>
-    <style>0</style>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <actions hook="false" hook_all="false">
-      <action type="WRITE_PV">
-        <pv_name>$(pv_name).PROC</pv_name>
-        <value>1</value>
-        <timeout>10</timeout>
-        <confirm_message></confirm_message>
-        <description></description>
-      </action>
-    </actions>
-    <font>
-      <opifont.name fontName="Noto Sans" height="9" style="0">Default</opifont.name>
-    </font>
-  </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
     <border_style>0</border_style>
     <tooltip></tooltip>
@@ -1106,9 +1052,9 @@ $(pv_value)</tooltip>
       <color red="240" green="240" blue="240" />
     </background_color>
     <width>80</width>
-    <x>558</x>
+    <x>195</x>
     <name>Action Button_28</name>
-    <y>984</y>
+    <y>1008</y>
     <style>0</style>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -1849,9 +1795,9 @@ $(pv_value)</tooltip>
       <color red="240" green="240" blue="240" />
     </background_color>
     <width>80</width>
-    <x>648</x>
+    <x>285</x>
     <name>Action Button_34</name>
-    <y>984</y>
+    <y>1008</y>
     <style>0</style>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -2056,7 +2002,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2096,7 +2042,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2136,7 +2082,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2216,7 +2162,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2266,7 +2212,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp1TooHigh_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp1TooHigh_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2274,7 +2220,7 @@ $(pv_value)</tooltip>
     <name>LED</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7dff</wuid>
@@ -2320,7 +2266,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp1TooLow_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp1TooLow_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2328,7 +2274,7 @@ $(pv_value)</tooltip>
     <name>LED_1</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7d7c</wuid>
@@ -2374,7 +2320,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp1Short_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp1Short_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2382,7 +2328,7 @@ $(pv_value)</tooltip>
     <name>LED_2</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7d6d</wuid>
@@ -2428,7 +2374,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp1Missing_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp1Missing_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2436,7 +2382,7 @@ $(pv_value)</tooltip>
     <name>LED_3</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7d61</wuid>
@@ -2472,7 +2418,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2512,7 +2458,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2552,7 +2498,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2592,7 +2538,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2682,7 +2628,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp2TooHigh_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp2TooHigh_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2690,7 +2636,7 @@ $(pv_value)</tooltip>
     <name>LED_4</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7c57</wuid>
@@ -2736,7 +2682,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp2TooLow_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp2TooLow_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2744,7 +2690,7 @@ $(pv_value)</tooltip>
     <name>LED_5</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7c56</wuid>
@@ -2790,7 +2736,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp2Short_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp2Short_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2798,7 +2744,7 @@ $(pv_value)</tooltip>
     <name>LED_6</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7c55</wuid>
@@ -2844,7 +2790,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp2Missing_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp2Missing_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -2852,7 +2798,7 @@ $(pv_value)</tooltip>
     <name>LED_7</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7c54</wuid>
@@ -2888,7 +2834,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2928,7 +2874,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -2968,7 +2914,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3008,7 +2954,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3098,7 +3044,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp3TooHigh_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp3TooHigh_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3106,7 +3052,7 @@ $(pv_value)</tooltip>
     <name>LED_8</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7bc7</wuid>
@@ -3152,7 +3098,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp3TooLow_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp3TooLow_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3160,7 +3106,7 @@ $(pv_value)</tooltip>
     <name>LED_9</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7bc6</wuid>
@@ -3206,7 +3152,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp3Short_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp3Short_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3214,7 +3160,7 @@ $(pv_value)</tooltip>
     <name>LED_10</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7bc5</wuid>
@@ -3260,7 +3206,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp3Missing_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp3Missing_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3268,7 +3214,7 @@ $(pv_value)</tooltip>
     <name>LED_11</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7bc4</wuid>
@@ -3304,7 +3250,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3344,7 +3290,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3384,7 +3330,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3424,7 +3370,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3514,7 +3460,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp4TooHigh_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp4TooHigh_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3522,7 +3468,7 @@ $(pv_value)</tooltip>
     <name>LED_12</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7b77</wuid>
@@ -3568,7 +3514,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp4TooLow_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp4TooLow_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3576,7 +3522,7 @@ $(pv_value)</tooltip>
     <name>LED_13</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7b76</wuid>
@@ -3622,7 +3568,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp4Short_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp4Short_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3630,7 +3576,7 @@ $(pv_value)</tooltip>
     <name>LED_14</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7b75</wuid>
@@ -3676,7 +3622,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusAlarmTemp4Missing_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusTemp4Missing_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3684,7 +3630,7 @@ $(pv_value)</tooltip>
     <name>LED_15</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7b74</wuid>
@@ -3810,7 +3756,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorStartupDelay_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusStartupDelay_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3818,7 +3764,7 @@ $(pv_value)</tooltip>
     <name>LED_16</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7a2c</wuid>
@@ -3854,7 +3800,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3894,7 +3840,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -3944,7 +3890,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorDownloadError_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusDownloadError_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -3952,7 +3898,7 @@ $(pv_value)</tooltip>
     <name>LED_17</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7a26</wuid>
@@ -3988,7 +3934,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4038,7 +3984,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorCritial_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusCritial_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4046,7 +3992,7 @@ $(pv_value)</tooltip>
     <name>LED_18</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-79b9</wuid>
@@ -4082,7 +4028,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4132,7 +4078,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorRegulatorOverload_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusRegulatorOverload_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4140,7 +4086,7 @@ $(pv_value)</tooltip>
     <name>LED_19</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-79b7</wuid>
@@ -4176,7 +4122,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4226,7 +4172,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorHighVoltage_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusHighVoltage_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4234,7 +4180,7 @@ $(pv_value)</tooltip>
     <name>LED_20</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-79a5</wuid>
@@ -4270,7 +4216,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4310,7 +4256,7 @@ $(pv_value)</tooltip>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4360,7 +4306,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorLowVoltage_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusLowVoltage_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4368,7 +4314,7 @@ $(pv_value)</tooltip>
     <name>LED_21</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-79a3</wuid>
@@ -4404,7 +4350,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4454,7 +4400,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorHigh12V_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusHigh12V_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4462,7 +4408,7 @@ $(pv_value)</tooltip>
     <name>LED_22</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7931</wuid>
@@ -4508,7 +4454,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorLow12V_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusLow12V_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4516,7 +4462,7 @@ $(pv_value)</tooltip>
     <name>LED_23</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-792f</wuid>
@@ -4552,7 +4498,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4602,7 +4548,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorCurrentHigh_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusCurrentHigh_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4610,7 +4556,7 @@ $(pv_value)</tooltip>
     <name>LED_24</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7927</wuid>
@@ -4646,7 +4592,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4696,7 +4642,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorCurrentLow_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusCurrentLow_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4704,7 +4650,7 @@ $(pv_value)</tooltip>
     <name>LED_25</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7925</wuid>
@@ -4740,7 +4686,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4790,7 +4736,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorFan1High_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusFan1High_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4798,7 +4744,7 @@ $(pv_value)</tooltip>
     <name>LED_26</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7912</wuid>
@@ -4834,7 +4780,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4884,7 +4830,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorFan1Low_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusFan1Low_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4892,7 +4838,7 @@ $(pv_value)</tooltip>
     <name>LED_27</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-7910</wuid>
@@ -4928,7 +4874,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -4978,7 +4924,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorFan2High_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusFan2High_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -4986,7 +4932,7 @@ $(pv_value)</tooltip>
     <name>LED_28</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-78f8</wuid>
@@ -5022,7 +4968,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -5072,7 +5018,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorFan2Low_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusFan2Low_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -5080,7 +5026,7 @@ $(pv_value)</tooltip>
     <name>LED_29</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-78f6</wuid>
@@ -5116,7 +5062,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -5166,7 +5112,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorSensorAlarmStop_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusSensorAlarmStop_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -5174,7 +5120,7 @@ $(pv_value)</tooltip>
     <name>LED_30</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-78da</wuid>
@@ -5210,7 +5156,7 @@ $(pv_value)</tooltip>
     <off_label>OK</off_label>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <tooltip></tooltip>
     <horizontal_alignment>0</horizontal_alignment>
     <rules />
@@ -5260,7 +5206,7 @@ $(pv_value)</tooltip>
     <height>20</height>
     <border_width>1</border_width>
     <visible>true</visible>
-    <pv_name>$(P)$(R)StatusErrorSensorAlarmIndicator_RBV</pv_name>
+    <pv_name>$(P)$(R)StatusSensorAlarmIndicator_RBV</pv_name>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
@@ -5268,7 +5214,7 @@ $(pv_value)</tooltip>
     <name>LED_31</name>
     <actions hook="false" hook_all="false" />
     <show_boolean_label>false</show_boolean_label>
-    <border_style>1</border_style>
+    <border_style>0</border_style>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <enabled>true</enabled>
     <wuid>-47932a2f:1591680d6e1:-78d8</wuid>
@@ -6169,6 +6115,174 @@ $(pv_value)</tooltip>
       <color red="0" green="0" blue="0" />
     </foreground_color>
     <actions hook="false" hook_all="false" />
+    <font>
+      <opifont.name fontName="Noto Sans" height="9" style="0">Default</opifont.name>
+    </font>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <toggle_button>false</toggle_button>
+    <border_style>0</border_style>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <alarm_pulsing>false</alarm_pulsing>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <push_action_index>0</push_action_index>
+    <rules />
+    <enabled>true</enabled>
+    <wuid>65f82aa:1591cdeaaad:-7595</wuid>
+    <pv_value />
+    <text>TEMP 2</text>
+    <scripts />
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <height>40</height>
+    <border_width>1</border_width>
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <image></image>
+    <visible>true</visible>
+    <pv_name></pv_name>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <widget_type>Action Button</widget_type>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <width>80</width>
+    <x>375</x>
+    <name>Action Button_37</name>
+    <y>1008</y>
+    <style>0</style>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <actions hook="false" hook_all="false">
+      <action type="OPEN_DISPLAY">
+        <path>temp.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <T>2</T>
+        </macros>
+        <replace>0</replace>
+        <description>Temperature 2</description>
+      </action>
+    </actions>
+    <font>
+      <opifont.name fontName="Noto Sans" height="9" style="0">Default</opifont.name>
+    </font>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <toggle_button>false</toggle_button>
+    <border_style>0</border_style>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <alarm_pulsing>false</alarm_pulsing>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <push_action_index>0</push_action_index>
+    <rules />
+    <enabled>true</enabled>
+    <wuid>65f82aa:1591cdeaaad:-758f</wuid>
+    <pv_value />
+    <text>TEMP 3</text>
+    <scripts />
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <height>40</height>
+    <border_width>1</border_width>
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <image></image>
+    <visible>true</visible>
+    <pv_name></pv_name>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <widget_type>Action Button</widget_type>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <width>80</width>
+    <x>465</x>
+    <name>Action Button_38</name>
+    <y>1008</y>
+    <style>0</style>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <actions hook="false" hook_all="false">
+      <action type="OPEN_DISPLAY">
+        <path>temp.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <T>3</T>
+        </macros>
+        <replace>0</replace>
+        <description>Temperature 3</description>
+      </action>
+    </actions>
+    <font>
+      <opifont.name fontName="Noto Sans" height="9" style="0">Default</opifont.name>
+    </font>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <toggle_button>false</toggle_button>
+    <border_style>0</border_style>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <alarm_pulsing>false</alarm_pulsing>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <push_action_index>0</push_action_index>
+    <rules />
+    <enabled>true</enabled>
+    <wuid>65f82aa:1591cdeaaad:-758b</wuid>
+    <pv_value />
+    <text>TEMP 4</text>
+    <scripts />
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <height>40</height>
+    <border_width>1</border_width>
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <image></image>
+    <visible>true</visible>
+    <pv_name></pv_name>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <widget_type>Action Button</widget_type>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <width>80</width>
+    <x>554</x>
+    <name>Action Button_39</name>
+    <y>1008</y>
+    <style>0</style>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <actions hook="false" hook_all="false">
+      <action type="OPEN_DISPLAY">
+        <path>temp.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <T>4</T>
+        </macros>
+        <replace>0</replace>
+        <description>Temperature 4</description>
+      </action>
+    </actions>
     <font>
       <opifont.name fontName="Noto Sans" height="9" style="0">Default</opifont.name>
     </font>

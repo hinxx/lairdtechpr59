@@ -11,13 +11,14 @@ record(ao, "$(P)$(R)PIDKp")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KP")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "20.0")
 }
 record(ai, "$(P)$(R)PIDKp_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KP")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -26,13 +27,14 @@ record(ao, "$(P)$(R)PIDKi")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KI")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "2.0")
 }
 record(ai, "$(P)$(R)PIDKi_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KI")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -41,13 +43,14 @@ record(ao, "$(P)$(R)PIDKd")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KD")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "5.0")
 }
 record(ai, "$(P)$(R)PIDKd_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KD")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -56,13 +59,14 @@ record(ao, "$(P)$(R)PIDKLPa")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPA")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "2.0")
 }
 record(ai, "$(P)$(R)PIDKLPa_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPA")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -71,13 +75,14 @@ record(ao, "$(P)$(R)PIDKLPb")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPB")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "3.0")
 }
 record(ai, "$(P)$(R)PIDKLPb_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_KLPB")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -86,13 +91,14 @@ record(ao, "$(P)$(R)PIDILimit")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_ILIMIT")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "100.0")
 }
 record(ai, "$(P)$(R)PIDILimit_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_ILIMIT")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -101,13 +107,14 @@ record(ao, "$(P)$(R)PIDDecay")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_DECAY")
-    field(PREC, "6")
+    field(PREC, "4")
+    field(VAL,  "0.1")
 }
 record(ai, "$(P)$(R)PIDDecay_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_DECAY")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -116,7 +123,7 @@ record(ai, "$(P)$(R)PIDTa_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TA")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -125,7 +132,7 @@ record(ai, "$(P)$(R)PIDTe_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TE")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -134,7 +141,7 @@ record(ai, "$(P)$(R)PIDTp_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TP")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -143,7 +150,7 @@ record(ai, "$(P)$(R)PIDTi_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TI")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -152,7 +159,7 @@ record(ai, "$(P)$(R)PIDTd_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TD")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -161,7 +168,7 @@ record(ai, "$(P)$(R)PIDTLPa_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPA")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }
 
@@ -170,6 +177,6 @@ record(ai, "$(P)$(R)PIDTLPb_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_PID_TLPB")
-    field(PREC, "6")
+    field(PREC, "4")
     field(SCAN, "I/O Intr")
 }

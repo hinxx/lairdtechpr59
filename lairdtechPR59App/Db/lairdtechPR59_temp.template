@@ -24,6 +24,7 @@ record(mbbo, "$(P)$(R)Temp$(T)Mode")
     field(ZRVL, "4")
     field(ONST, "PT")
     field(ONVL, "16")
+    field(VAL,  "4")
 }
 record(mbbi, "$(P)$(R)Temp$(T)Mode_RBV")
 {
@@ -43,6 +44,7 @@ record(ao, "$(P)$(R)Temp$(T)Gain")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_GAIN")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "1.0")
 }
 record(ai, "$(P)$(R)Temp$(T)Gain_RBV")
 {
@@ -59,6 +61,7 @@ record(ao, "$(P)$(R)Temp$(T)Offset")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_OFFSET")
     field(SCAN, "Passive")
     field(PREC, "4")
+    field(VAL,  "0.0")
 }
 record(ai, "$(P)$(R)Temp$(T)Offset_RBV")
 {
@@ -74,14 +77,14 @@ record(ao, "$(P)$(R)Temp$(T)CoeffA")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_A")
     field(SCAN, "Passive")
-    field(PREC, "4")
+    field(PREC, "12")
 }
 record(ai, "$(P)$(R)Temp$(T)CoeffA_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_A")
     field(SCAN, "I/O Intr")
-    field(PREC, "4")
+    field(PREC, "12")
 }
 
 # register 60
@@ -90,14 +93,14 @@ record(ao, "$(P)$(R)Temp$(T)CoeffB")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_B")
     field(SCAN, "Passive")
-    field(PREC, "4")
+    field(PREC, "12")
 }
 record(ai, "$(P)$(R)Temp$(T)CoeffB_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_B")
     field(SCAN, "I/O Intr")
-    field(PREC, "4")
+    field(PREC, "12")
 }
 
 # register 61
@@ -106,14 +109,14 @@ record(ao, "$(P)$(R)Temp$(T)CoeffC")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_C")
     field(SCAN, "Passive")
-    field(PREC, "4")
+    field(PREC, "12")
 }
 record(ai, "$(P)$(R)Temp$(T)CoeffC_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_TEMP_$(T)_COEFF_C")
     field(SCAN, "I/O Intr")
-    field(PREC, "4")
+    field(PREC, "12")
 }
 
 # not sent to to the unit, used for internal Steinhart coefficient calculation

@@ -42,27 +42,41 @@
 #define LTSampleRateString				"LT_SAMPLE_RATE"			/**< (asynInt32,			r/o) Regulator sample rate */
 #define LTTcCoolGainString				"LT_TC_COOL_GAIN"			/**< (asynFloat64,			r/w) Cool gain of the Tc signal */
 #define LTTcHeatGainString				"LT_TC_HEAT_GAIN"			/**< (asynFloat64,			r/w) Heat gain of the Tc signal */
-#define LTDeadBandString				"LT_DEAD_BAND"				/**< (asynFloat64,			r/w) ON/OFF dead band */
-#define LTHysteresisString				"LT_HYSTERESIS"				/**< (asynFloat64,			r/w) ON/OFF hysteresis */
+#define LTAlgoDeadBandString			"LT_ALGO_DEAD_BAND"			/**< (asynFloat64,			r/w) ON/OFF dead band */
+#define LTAlgoHysteresisString			"LT_ALGO_HYSTERESIS"		/**< (asynFloat64,			r/w) ON/OFF hysteresis */
 #define LTTRefString					"LT_TREF"					/**< (asynFloat64,			r/o) TRef value */
 #define LTTcOutputString				"LT_TC_OUTPUT"				/**< (asynFloat64,			r/o) Output Tc value */
 #define LTInputVoltageString			"LT_INPUT_VOLTAGE"			/**< (asynFloat64,			r/o) Input voltage */
 #define LTInternal12VString				"LT_INTERNAL_VOLTAGE"		/**< (asynFloat64,			r/o) Internal 12V voltage */
 #define LTMainCurrentString				"LT_MAIN_CURRENT"			/**< (asynFloat64,			r/o) Main current */
 
-#define LTTemp1String					"LT_TEMP_1"					/**< (asynFloat64,			r/o) Temperature 1 value */
+#define LTTemp1String					"LT_TEMP_1"					/**< (asynFloat64,			r/o) Temperature sensor 1 value */
 #define LTTemp1ModeString				"LT_TEMP_1_MODE"			/**< (asynUInt32Digital,	r/w) Temperature sensor 1 mode of operation */
-#define LTTemp1GainString				"LT_TEMP_1_GAIN"			/**< (asynFloat64,			r/w) Temperature 1 gain */
-#define LTTemp1OffsetString				"LT_TEMP_1_OFFSET"			/**< (asynFloat64,			r/w) Temperature 1 offset */
-#define LTTemp1CoeffAString				"LT_TEMP_1_COEFF_A"			/**< (asynFloat64,			r/w) Temperature 1 Steinhart coefficient A */
-#define LTTemp1CoeffBString				"LT_TEMP_1_COEFF_B"			/**< (asynFloat64,			r/w) Temperature 1 Steinhart coefficient B */
-#define LTTemp1CoeffCString				"LT_TEMP_1_COEFF_C"			/**< (asynFloat64,			r/w) Temperature 1 Steinhart coefficient C */
-#define LTTemp1ResHighString			"LT_TEMP_1_RES_HIGH"		/**< (asynFloat64,			r/w) Temperature 1 resistance high */
-#define LTTemp1ResMedString				"LT_TEMP_1_RES_MED"			/**< (asynFloat64,			r/w) Temperature 1 resistance medium */
-#define LTTemp1ResLowString				"LT_TEMP_1_RES_LOW"			/**< (asynFloat64,			r/w) Temperature 1 resistance low */
-#define LTTemp1TempHighString			"LT_TEMP_1_TEMP_HIGH"		/**< (asynFloat64,			r/w) Temperature 1 temperature high */
-#define LTTemp1TempMedString			"LT_TEMP_1_TEMP_MED"		/**< (asynFloat64,			r/w) Temperature 1 temperature medium */
-#define LTTemp1TempLowString			"LT_TEMP_1_TEMP_LOW"		/**< (asynFloat64,			r/w) Temperature 1 temperature low */
+#define LTTemp1GainString				"LT_TEMP_1_GAIN"			/**< (asynFloat64,			r/w) Temperature sensor 1 gain */
+#define LTTemp1OffsetString				"LT_TEMP_1_OFFSET"			/**< (asynFloat64,			r/w) Temperature sensor 1 offset */
+#define LTTemp1CoeffAString				"LT_TEMP_1_COEFF_A"			/**< (asynFloat64,			r/w) Temperature sensor 1 Steinhart coefficient A */
+#define LTTemp1CoeffBString				"LT_TEMP_1_COEFF_B"			/**< (asynFloat64,			r/w) Temperature sensor 1 Steinhart coefficient B */
+#define LTTemp1CoeffCString				"LT_TEMP_1_COEFF_C"			/**< (asynFloat64,			r/w) Temperature sensor 1 Steinhart coefficient C */
+#define LTTemp1ResHighString			"LT_TEMP_1_RES_HIGH"		/**< (asynFloat64,			r/w) Temperature sensor 1 resistance high */
+#define LTTemp1ResMedString				"LT_TEMP_1_RES_MED"			/**< (asynFloat64,			r/w) Temperature sensor 1 resistance medium */
+#define LTTemp1ResLowString				"LT_TEMP_1_RES_LOW"			/**< (asynFloat64,			r/w) Temperature sensor 1 resistance low */
+#define LTTemp1TempHighString			"LT_TEMP_1_TEMP_HIGH"		/**< (asynFloat64,			r/w) Temperature sensor 1 temperature high */
+#define LTTemp1TempMedString			"LT_TEMP_1_TEMP_MED"		/**< (asynFloat64,			r/w) Temperature sensor 1 temperature medium */
+#define LTTemp1TempLowString			"LT_TEMP_1_TEMP_LOW"		/**< (asynFloat64,			r/w) Temperature sensor 1 temperature low */
+
+#define LTTemp4String					"LT_TEMP_4"					/**< (asynFloat64,			r/o) Temperature sensor 4 value */
+#define LTTemp4ModeString				"LT_TEMP_4_MODE"			/**< (asynUInt32Digital,	r/w) Temperature sensor 4 mode of operation */
+#define LTTemp4GainString				"LT_TEMP_4_GAIN"			/**< (asynFloat64,			r/w) Temperature sensor 4 gain */
+#define LTTemp4OffsetString				"LT_TEMP_4_OFFSET"			/**< (asynFloat64,			r/w) Temperature sensor 4 offset */
+#define LTTemp4CoeffAString				"LT_TEMP_4_COEFF_A"			/**< (asynFloat64,			r/w) Temperature sensor 4 Steinhart coefficient A */
+#define LTTemp4CoeffBString				"LT_TEMP_4_COEFF_B"			/**< (asynFloat64,			r/w) Temperature sensor 4 Steinhart coefficient B */
+#define LTTemp4CoeffCString				"LT_TEMP_4_COEFF_C"			/**< (asynFloat64,			r/w) Temperature sensor 4 Steinhart coefficient C */
+#define LTTemp4ResHighString			"LT_TEMP_4_RES_HIGH"		/**< (asynFloat64,			r/w) Temperature sensor 4 resistance high */
+#define LTTemp4ResMedString				"LT_TEMP_4_RES_MED"			/**< (asynFloat64,			r/w) Temperature sensor 4 resistance medium */
+#define LTTemp4ResLowString				"LT_TEMP_4_RES_LOW"			/**< (asynFloat64,			r/w) Temperature sensor 4 resistance low */
+#define LTTemp4TempHighString			"LT_TEMP_4_TEMP_HIGH"		/**< (asynFloat64,			r/w) Temperature sensor 4 temperature high */
+#define LTTemp4TempMedString			"LT_TEMP_4_TEMP_MED"		/**< (asynFloat64,			r/w) Temperature sensor 4 temperature medium */
+#define LTTemp4TempLowString			"LT_TEMP_4_TEMP_LOW"		/**< (asynFloat64,			r/w) Temperature sensor 4 temperature low */
 
 #define LTPIDKpString					"LT_PID_KP"					/**< (asynFloat64,			r/w) PID Kp value */
 #define LTPIDKiString					"LT_PID_KI"					/**< (asynFloat64,			r/w) PID Ki value */
@@ -79,28 +93,12 @@
 #define LTPIDTLPaString					"LT_PID_TLPA"				/**< (asynFloat64,			r/o) PID TLP a value */
 #define LTPIDTLPbString					"LT_PID_TLPB"				/**< (asynFloat64,			r/o) PID TLP b value */
 
-//enum {
-//	LTPR59RegisterTypeUnknown = 0,
-//	LTPR59RegisterTypeInt,
-//	LTPR59RegisterTypeUInt,
-//	LTPR59RegisterTypeFloat
-//};
-//
-//enum {
-//	LTPR59RegisterAccessUnknown = 0,
-//	LTPR59RegisterAccessReadOnly,
-//	LTPR59RegisterAccessReadWrite,
-//	LTPR59RegisterAccessWriteOnly
-//};
-//
 struct LTPR59Register {
 	int num;
 	int mask;
 	int write;
 	asynParamType type;
-//	int acc;
 	int param;
-//	char str[64];
 };
 #define LTPR59_MAX_REGISTERS	256
 
@@ -111,13 +109,6 @@ public:
 
 	/* These are the methods that we override from asynPortDriver */
 	virtual asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
-//    virtual asynStatus readInt32(asynUser *pasynUser, epicsInt32 *value);
-//    virtual asynStatus readUInt32Digital(asynUser *pasynUser, epicsUInt32 *value, epicsUInt32 mask);
-//    virtual asynStatus writeUInt32Digital(asynUser *pasynUser, epicsUInt32 value, epicsUInt32 mask);
-//    virtual asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
-//    virtual asynStatus readFloat64(asynUser *pasynUser, epicsFloat64 *value);
-//    virtual asynStatus readOctet(asynUser *pasynUser, char *value, size_t maxChars,
-//                                        size_t *nActual, int *eomReason);
 	void report(FILE *fp, int details);
 	/* These are new methods */
 	// Should be private, but are called from C so must be public
@@ -162,8 +153,8 @@ protected:
 	int LTSampleRate;
 	int LTTcCoolGain;
 	int LTTcHeatGain;
-	int LTDeadBand;
-	int LTHysteresis;
+	int LTAlgoDeadBand;
+	int LTAlgoHysteresis;
 	int LTTRef;
 	int LTTcOutput;
 	int LTInputVoltage;
@@ -183,6 +174,20 @@ protected:
 	int LTTemp1TempHigh;
 	int LTTemp1TempMed;
 	int LTTemp1TempLow;
+
+	int LTTemp4;
+	int LTTemp4Mode;
+	int LTTemp4Gain;
+	int LTTemp4Offset;
+	int LTTemp4CoeffA;
+	int LTTemp4CoeffB;
+	int LTTemp4CoeffC;
+	int LTTemp4ResHigh;
+	int LTTemp4ResMed;
+	int LTTemp4ResLow;
+	int LTTemp4TempHigh;
+	int LTTemp4TempMed;
+	int LTTemp4TempLow;
 
 	int LTPIDKp;
 	int LTPIDKi;
@@ -219,19 +224,15 @@ private:
     asynStatus readDataInt(unsigned int reg, epicsInt32 *val);
     asynStatus readString(const char *cmd, char *val, unsigned int *len);
     asynStatus controlLogging(const bool active);
-
-//	char *mSerialPort;
-	asynUser *mAsynUserCommand;
-	epicsEventId mDataEvent;
-	unsigned int mAcquiringData;
-	unsigned int mFinish;
-
     asynStatus createRegisterParam(const int num, const int mask, const char *name, asynParamType type, int *index);
     asynStatus findRegister(const int num, struct LTPR59Register **reg);
     asynStatus readAllRegisterParams(void);
     asynStatus writeAllRegisterParams(void);
-//    asynStatus readAll(void);
 
+	asynUser *mAsynUserCommand;
+	epicsEventId mDataEvent;
+	unsigned int mAcquiringData;
+	unsigned int mFinish;
     struct LTPR59Register mRegs[LTPR59_MAX_REGISTERS];
     int mRegsIndex;
 };

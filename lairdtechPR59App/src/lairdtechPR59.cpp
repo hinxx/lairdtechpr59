@@ -609,359 +609,6 @@ asynStatus LTPR59::controlLogging(const bool active) {
 	return status;
 }
 
-#if 0
-asynStatus LTPR59::readInt32(asynUser *pasynUser, epicsInt32 *value) {
-
-	int function = pasynUser->reason;
-	int addr = 0;
-	asynStatus status = asynSuccess;
-
-	status = getAddress(pasynUser, &addr);
-	if (status != asynSuccess) {
-		return(status);
-	}
-
-	if (function == LTSampleRate) {
-		status = readDataInt(9, value);
-	} else if (function == LTEventCounter) {
-			status = readDataInt(99, value);
-	} else {
-		status = asynPortDriver::readInt32(pasynUser, value);
-	}
-	printf("%s: function %d, addr %d, value %d\n", __func__, function, addr, *value);
-
-	if (status) {
-		asynPrint(pasynUser, ASYN_TRACE_ERROR,
-			  "%s:%s: error, status=%d function=%d, addr=%d, value=%d\n",
-			  driverName, __func__, status, function, addr, *value);
-	} else {
-		asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: function=%d, addr=%d, value=%d\n",
-			  driverName, __func__, function, addr, *value);
-	}
-
-	return status;
-
-}
-
-asynStatus LTPR59::writeUInt32Digital(asynUser *pasynUser, epicsUInt32 value, epicsUInt32 mask) {
-
-	int function = pasynUser->reason;
-	int addr = 0;
-	asynStatus status = asynSuccess;
-
-	status = getAddress(pasynUser, &addr);
-	if (status != asynSuccess) {
-		return(status);
-	}
-
-	printf("%s: function %d, addr %d, value %d, mask 0x%X\n", __func__, function, addr, value, mask);
-	status = setUIntDigitalParam(addr, function, value, mask);
-
-	if (function == LTMode ||
-		function == LTModeFlags ||
-		function == LTFilterA ||
-		function == LTFilterB) {
-		epicsUInt32 bits;
-		epicsInt32 regVal = 0;
-		getUIntDigitalParam(LTMode, &bits, 0xF);
-		regVal = bits;
-		getUIntDigitalParam(LTModeFlags, &bits, 0x3F0);
-		regVal |= bits;
-		getUIntDigitalParam(LTFilterA, &bits, 0x3000);
-		regVal |= bits;
-		getUIntDigitalParam(LTFilterB, &bits, 0xC000);
-		regVal |= bits;
-		status = writeDataInt(13, regVal);
-	} else if (function == LTTemp1Mode) {
-		/* Temp1 has zoom mode */
-		value |= 0x08;
-		status = writeDataInt(55, (epicsInt32)value);
-	}
-
-	/* Do callbacks so higher layers see any changes */
-	callParamCallbacks(addr, addr);
-
-	if (status) {
-		asynPrint(pasynUser, ASYN_TRACE_ERROR,
-			  "%s:%s: error, status=%d function=%d, addr=%d, value=%d\n",
-			  driverName, __func__, status, function, addr, value);
-	} else {
-		asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: function=%d, addr=%d, value=%d\n",
-			  driverName, __func__, function, addr, value);
-	}
-
-	return status;
-}
-
-asynStatus LTPR59::readUInt32Digital(asynUser *pasynUser, epicsUInt32 *value, epicsUInt32 mask) {
-
-	int function = pasynUser->reason;
-	int addr = 0;
-	asynStatus status = asynSuccess;
-
-	status = getAddress(pasynUser, &addr);
-	if (status != asynSuccess) {
-		return(status);
-	}
-
-	if (function == LTMode ||
-		function == LTModeFlags ||
-		function == LTFilterA ||
-		function == LTFilterB) {
-		status = readDataInt(13, (epicsInt32 *)value);
-	} else if (function == LTTemp1Mode) {
-		status = readDataInt(55, (epicsInt32 *)value);
-		/* Temp1 has zoom mode */
-		*value &= ~0x08;
-	} else {
-		status = asynPortDriver::readUInt32Digital(pasynUser, value, mask);
-	}
-	printf("%s: function %d, addr %d, value %d, mask 0x%X\n", __func__, function, addr, *value, mask);
-
-	if (status) {
-		asynPrint(pasynUser, ASYN_TRACE_ERROR,
-			  "%s:%s: error, status=%d function=%d, addr=%d, value=%d\n",
-			  driverName, __func__, status, function, addr, *value);
-	} else {
-		asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: function=%d, addr=%d, value=%d\n",
-			  driverName, __func__, function, addr, *value);
-	}
-
-	return status;
-
-}
-
-asynStatus LTPR59::writeFloat64(asynUser *pasynUser, epicsFloat64 value) {
-
-	int function = pasynUser->reason;
-	int addr = 0;
-	asynStatus status = asynSuccess;
-
-	status = getAddress(pasynUser, &addr);
-	if (status != asynSuccess) {
-		return(status);
-	}
-
-	printf("%s: function %d, addr %d, value %f\n", __func__, function, addr, value);
-	status = setDoubleParam(addr, function, value);
-
-	if (function == LTTrSetPoint) {
-		status = writeDataFloat(0, value);
-	} else if (function == LTTcLimit) {
-		status = writeDataFloat(6, value);
-	} else if (function == LTTcDeadBand) {
-		status = writeDataFloat(7, value);
-	} else if (function == LTTcCoolGain) {
-		status = writeDataFloat(10, value);
-	} else if (function == LTTcHeatGain) {
-		status = writeDataFloat(11, value);
-	} else if (function == LTTemp1Gain) {
-		status = writeDataFloat(35, value);
-	} else if (function == LTTemp1Offset) {
-		status = writeDataFloat(36, value);
-	} else if (function == LTTemp1CoeffA) {
-		status = writeDataFloat(59, value);
-	} else if (function == LTTemp1CoeffB) {
-		status = writeDataFloat(60, value);
-	} else if (function == LTTemp1CoeffC) {
-		status = writeDataFloat(61, value);
-	} else if (function == LTTemp1ResHigh ||
-			function == LTTemp1ResMed ||
-			function == LTTemp1ResLow ||
-			function == LTTemp1TempHigh ||
-			function == LTTemp1TempMed ||
-			function == LTTemp1TempLow) {
-		// XXX: implement calculation of Steinhart coefficients, update A,B,C
-		//      coefficient PVs and unit registers
-	} else if (function == LTPIDKp) {
-		status = writeDataFloat(1, value);
-	} else if (function == LTPIDKi) {
-		status = writeDataFloat(2, value);
-	} else if (function == LTPIDKd) {
-		status = writeDataFloat(3, value);
-	} else if (function == LTPIDKLPa) {
-		status = writeDataFloat(4, value);
-	} else if (function == LTPIDKLPb) {
-		status = writeDataFloat(5, value);
-	} else if (function == LTPIDILimit) {
-		status = writeDataFloat(8, value);
-	} else if (function == LTPIDDecay) {
-		status = writeDataFloat(12, value);
-	}
-
-	/* Do callbacks so higher layers see any changes */
-	callParamCallbacks(addr, addr);
-
-	if (status) {
-		asynPrint(pasynUser, ASYN_TRACE_ERROR,
-			  "%s:%s: error, status=%d function=%d, addr=%d, value=%f\n",
-			  driverName, __func__, status, function, addr, value);
-	} else {
-		asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: function=%d, addr=%d, value=%f\n",
-			  driverName, __func__, function, addr, value);
-	}
-
-	return status;
-}
-
-asynStatus LTPR59::readFloat64(asynUser *pasynUser, epicsFloat64 *value) {
-
-	int function = pasynUser->reason;
-	int addr = 0;
-	asynStatus status = asynSuccess;
-
-	status = getAddress(pasynUser, &addr);
-	if (status != asynSuccess) {
-		return(status);
-	}
-
-	/* Handle parameters */
-	if (function >= LTMode) {
-
-	}
-
-	if (function == LTTrSetPoint) {
-		status = readDataFloat(0, value);
-	} else if (function == LTTcLimit) {
-		status = readDataFloat(6, value);
-	} else if (function == LTTcDeadBand) {
-		status = readDataFloat(7, value);
-	} else if (function == LTTcCoolGain) {
-		status = readDataFloat(10, value);
-	} else if (function == LTTcHeatGain) {
-		status = readDataFloat(11, value);
-	} else if (function == LTTRef) {
-		status = readDataFloat(105, value);
-	} else if (function == LTTcOutput) {
-		status = readDataFloat(106, value);
-	} else if (function == LTInputVoltage) {
-		status = readDataFloat(150, value);
-	} else if (function == LTInternal12V) {
-		status = readDataFloat(151, value);
-	} else if (function == LTMainCurrent) {
-		status = readDataFloat(152, value);
-	} else if (function == LTTemp1) {
-		status = readDataFloat(100, value);
-	} else if (function == LTTemp1Gain) {
-		status = readDataFloat(35, value);
-	} else if (function == LTTemp1Offset) {
-		status = readDataFloat(36, value);
-	} else if (function == LTTemp1CoeffA) {
-		status = readDataFloat(59, value);
-	} else if (function == LTTemp1CoeffB) {
-		status = readDataFloat(60, value);
-	} else if (function == LTTemp1CoeffC) {
-		status = readDataFloat(61, value);
-	} else if (function == LTPIDKp) {
-		status = readDataFloat(1, value);
-	} else if (function == LTPIDKi) {
-		status = readDataFloat(2, value);
-	} else if (function == LTPIDKd) {
-		status = readDataFloat(3, value);
-	} else if (function == LTPIDKLPa) {
-		status = readDataFloat(4, value);
-	} else if (function == LTPIDKLPb) {
-		status = readDataFloat(5, value);
-	} else if (function == LTPIDILimit) {
-		status = readDataFloat(8, value);
-	} else if (function == LTPIDDecay) {
-		status = readDataFloat(12, value);
-	} else if (function == LTPIDTa) {
-		status = readDataFloat(110, value);
-	} else if (function == LTPIDTe) {
-		status = readDataFloat(111, value);
-	} else if (function == LTPIDTp) {
-		status = readDataFloat(112, value);
-	} else if (function == LTPIDTi) {
-		status = readDataFloat(113, value);
-	} else if (function == LTPIDTd) {
-		status = readDataFloat(114, value);
-	} else if (function == LTPIDTLPa) {
-		status = readDataFloat(117, value);
-	} else if (function == LTPIDTLPb) {
-		status = readDataFloat(118, value);
-	} else {
-		status = asynPortDriver::readFloat64(pasynUser, value);
-	}
-
-	printf("%s: function %d, addr %d, value %f\n", __func__, function, addr, *value);
-
-	if (status) {
-		asynPrint(pasynUser, ASYN_TRACE_ERROR,
-			  "%s:%s: error, status=%d function=%d, addr=%d, value=%f\n",
-			  driverName, __func__, status, function, addr, *value);
-	} else {
-		asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: function=%d, addr=%d, value=%f\n",
-			  driverName, __func__, function, addr, *value);
-	}
-
-	return status;
-
-}
-
-asynStatus LTPR59::readOctet(asynUser *pasynUser, char *value, size_t maxChars,
-                                    size_t *nActual, int *eomReason) {
-
-	int function = pasynUser->reason;
-	int addr = 0;
-	unsigned int len, n;
-	unsigned int alarms, errors;
-	asynStatus status = asynSuccess;
-
-	status = getAddress(pasynUser, &addr);
-	if (status != asynSuccess) {
-		return(status);
-	}
-
-	if (function == LTID) {
-		len = maxChars;
-		status = readString("$LI", value, &len);
-		*nActual = len;
-		*eomReason = 0;
-	} else if (function == LTVersion) {
-		len = maxChars;
-		status = readString("$v", value, &len);
-		*nActual = len;
-		*eomReason = 0;
-	} else if (function == LTStatus) {
-		len = maxChars;
-		status = readString("$S", value, &len);
-		*nActual = len;
-		*eomReason = 0;
-		n = sscanf(value, "%X %X %*s", &alarms, &errors);
-		if (n != 2) {
-			status = asynError;
-		} else {
-			printf("%s: alarms 0x%X, errors 0x%X\n", __func__, alarms, errors);
-			setUIntDigitalParam(LTStatusAlarm, alarms, 0xFFFF);
-			setUIntDigitalParam(LTStatusError, errors, 0xFFFF);
-			/* Do callbacks so higher layers see any changes */
-			callParamCallbacks(addr, addr);
-		}
-	} else {
-		status = asynPortDriver::readOctet(pasynUser, value, maxChars, nActual, eomReason);
-	}
-	printf("%s: function %d, addr %d, len %d, value %s\n", __func__, function, addr, len, value);
-
-	if (status) {
-		asynPrint(pasynUser, ASYN_TRACE_ERROR,
-			  "%s:%s: error, status=%d function=%d, addr=%d, value=%s\n",
-			  driverName, __func__, status, function, addr, value);
-	} else {
-		asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-			  "%s:%s: function=%d, addr=%d, value=%s\n",
-			  driverName, __func__, function, addr, value);
-	}
-
-	return status;
-}
-#endif
-
 asynStatus LTPR59::createRegisterParam(const int num, const int mask,
 		const char *name, asynParamType type, int *index) {
 	struct LTPR59Register *reg;
@@ -1250,8 +897,8 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	createRegisterParam(9,		0x0, 	LTSampleRateString,			asynParamInt32,			&LTSampleRate);
 	createRegisterParam(10,		0x0, 	LTTcCoolGainString,			asynParamFloat64,		&LTTcCoolGain);
 	createRegisterParam(11,		0x0, 	LTTcHeatGainString,			asynParamFloat64,		&LTTcHeatGain);
-	createRegisterParam(14,		0x0, 	LTDeadBandString,			asynParamFloat64,		&LTDeadBand);
-	createRegisterParam(15,		0x0, 	LTHysteresisString,			asynParamFloat64,		&LTHysteresis);
+	createRegisterParam(14,		0x0, 	LTAlgoDeadBandString,		asynParamFloat64,		&LTAlgoDeadBand);
+	createRegisterParam(15,		0x0, 	LTAlgoHysteresisString,		asynParamFloat64,		&LTAlgoHysteresis);
 	createRegisterParam(105,	0x0, 	LTTRefString,				asynParamFloat64,		&LTTRef);
 	createRegisterParam(106,	0x0, 	LTTcOutputString,			asynParamFloat64,		&LTTcOutput);
 	createRegisterParam(150,	0x0, 	LTInputVoltageString,		asynParamFloat64,		&LTInputVoltage);
@@ -1272,6 +919,24 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	createRegisterParam(-1,		0x0, 	LTTemp1TempHighString,		asynParamFloat64,		&LTTemp1TempHigh);
 	createRegisterParam(-1,		0x0, 	LTTemp1TempMedString,		asynParamFloat64,		&LTTemp1TempMed);
 	createRegisterParam(-1,		0x0, 	LTTemp1TempLowString,		asynParamFloat64,		&LTTemp1TempLow);
+
+	/* TODO: Temperature 2 parameters */
+	/* TODO: Temperature 3 parameters */
+
+	/* Temperature 4 parameters */
+	createRegisterParam(103,	0x0, 	LTTemp4String,				asynParamFloat64,		&LTTemp4);
+	createRegisterParam(58,		0x1F, 	LTTemp4ModeString,			asynParamUInt32Digital,	&LTTemp4Mode);
+	createRegisterParam(41,		0x0, 	LTTemp4GainString,			asynParamFloat64,		&LTTemp4Gain);
+	createRegisterParam(42,		0x0, 	LTTemp4OffsetString,		asynParamFloat64,		&LTTemp4Offset);
+	createRegisterParam(68,		0x0, 	LTTemp4CoeffAString,		asynParamFloat64,		&LTTemp4CoeffA);
+	createRegisterParam(69,		0x0, 	LTTemp4CoeffBString,		asynParamFloat64,		&LTTemp4CoeffB);
+	createRegisterParam(70,		0x0, 	LTTemp4CoeffCString,		asynParamFloat64,		&LTTemp4CoeffC);
+	createRegisterParam(88,		0x0, 	LTTemp4ResHighString,		asynParamFloat64,		&LTTemp4ResHigh);
+	createRegisterParam(89,		0x0, 	LTTemp4ResMedString,		asynParamFloat64,		&LTTemp4ResMed);
+	createRegisterParam(90,		0x0, 	LTTemp4ResLowString,		asynParamFloat64,		&LTTemp4ResLow);
+	createRegisterParam(-1,		0x0, 	LTTemp4TempHighString,		asynParamFloat64,		&LTTemp4TempHigh);
+	createRegisterParam(-1,		0x0, 	LTTemp4TempMedString,		asynParamFloat64,		&LTTemp4TempMed);
+	createRegisterParam(-1,		0x0, 	LTTemp4TempLowString,		asynParamFloat64,		&LTTemp4TempLow);
 
 	/* PID parameters */
 	createRegisterParam(1,		0x0, 	LTPIDKpString,				asynParamFloat64,		&LTPIDKp);
@@ -1295,6 +960,8 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	setStringParam(LTVersion,				"");
 	setStringParam(LTStatus,				"");
 	setIntegerParam(LTLoggingMode,		     0);
+	setUIntDigitalParam(LTStatusAlarm,		 0, 0xFFFF);
+	setUIntDigitalParam(LTStatusError,		 0, 0xFFFF);
 
 	mAcquiringData = 0;
 	mFinish = 0;
