@@ -496,8 +496,63 @@ void LTPR59::dataTask(void) {
 				 * View RUNTIMEDATA
 				 * [6 91E4 100AC001 00 00 0.0000 0.0000 0.0000 -999.9000 -999.9000 -999.9000 67.7612 0.0000 20.0000 -999.9000 36.6650 0.0000 0.0000 0.0000 20.0000 20.0377 0.0000 -12.1233]
 				 *
-				 * XXX: To be decoded.. contact company?
+				 * Partial decoded values from comparing to other $Ax outputs and registers:
+				 * 0 - mode
+				 * 1 - event counter in hex
+				 * 2 - status alarms and errors in hex
+				 * 3 - regulator mode in hex (?)
+				 * 4 - ? in hex (?)
+				 * 5 - Tc $R106
+				 * 6 - ?
+				 * 7 - ?
+				 * 8 - Temp 1 $R55
+				 * 9 - Temp 2 $R56
+				 * 10 - Temp 3 $R57
+				 * 11 - Temp 4 $R58
+				 * 12 - ?
+				 * 13 - TRef $R105
+				 * 14 - Ta $R110
+				 * 15 - Te $R111
+				 * 16 - Tp $R112
+				 * 17 - Ti $R113
+				 * 18 - Td $R114
+				 * 19 - TLP_A $R117
+				 * 20 - TLP_B $R118
+				 * 21 - ?
+				 * 22 - ?
+				 *
+				 * XXX: To be decoded fully.. contact company?
 				 */
+				n = sscanf(mResp, "[%d %X %X %X %X %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f]",
+					&iv[0], &iv[1], &iv[2], &iv[3], &iv[4],
+					&fv[0], &fv[1], &fv[2], &fv[3], &fv[4], &fv[5], &fv[6], &fv[7],
+					&fv[8], &fv[9], &fv[10], &fv[11], &fv[12], &fv[13], &fv[14],
+					&fv[15], &fv[16], &fv[17]);
+				printf("%s: Parsed %d values..\n", __func__, n);
+				if (n == 23) {
+					setIntegerParam(LTEventCounter, iv[1]);
+					sprintf(buf, "%04X %04X", (iv[2] >> 16) & 0xFFFF, (iv[2] & 0xFFFF));
+					setStringParam(LTStatus, buf);
+					printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, (iv[2] >> 16) & 0xFFFF, (iv[2] & 0xFFFF));
+					setUIntDigitalParam(LTStatusAlarm, iv[2] >> 16, 0xFFFF);
+					setUIntDigitalParam(LTStatusError, iv[2], 0xFFFF);
+					printf("%s::%s: regulator mode %d\n", driverName, __func__, iv[3]);
+					setDoubleParam(LTTcOutput, fv[0]);
+					setDoubleParam(LTTemp1, fv[3]);
+					// skip temp2
+					// skip temp3
+					setDoubleParam(LTTemp4, fv[6]);
+					setDoubleParam(LTTRef, fv[8]);
+					setDoubleParam(LTPIDTa, fv[9]);
+					setDoubleParam(LTPIDTe, fv[10]);
+					setDoubleParam(LTPIDTp, fv[11]);
+					setDoubleParam(LTPIDTi, fv[12]);
+					setDoubleParam(LTPIDTd, fv[13]);
+					setDoubleParam(LTPIDTLPa, fv[14]);
+					setDoubleParam(LTPIDTLPb, fv[15]);
+					/* Do callbacks so higher layers see any changes */
+					callParamCallbacks();
+				}
 
 			} else if (contLog == 7) {
 				/* $A7

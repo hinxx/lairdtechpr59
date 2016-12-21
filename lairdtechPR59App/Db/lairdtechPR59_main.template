@@ -136,7 +136,6 @@ record(bo, "$(P)$(R)Retrieve")
 {
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))LT_RETRIEVE")
-##   field(PINI, "YES")
 }
 
 ##############################################################################

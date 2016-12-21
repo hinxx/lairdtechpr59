@@ -77,3 +77,6 @@ dbpf $(PORT):ModeFlags "None"
 dbpf $(PORT):FilterA "Off"
 dbpf $(PORT):FilterB "Off"
 dbpf $(PORT):StartStop "Stop"
+
+# Get initial values
+dbpf $(PORT):Retrieve 1
