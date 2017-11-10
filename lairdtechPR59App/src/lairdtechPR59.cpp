@@ -909,7 +909,6 @@ void LTPR59::report(FILE *fp, int details) {
 LTPR59::LTPR59(const char *portName, const char *serialPort)
    : asynPortDriver(portName,
 		   1,
-		   NUM_LTPR59_PARAMS,
 		   asynInt32Mask | asynFloat64Mask | asynOctetMask | asynUInt32DigitalMask | asynDrvUserMask,
 		   asynInt32Mask | asynFloat64Mask | asynOctetMask | asynUInt32DigitalMask,
 		   ASYN_CANBLOCK, /* asynFlags: ASYN_CANBLOCK=1, ASYN_MULTIDEVICE=0*/
