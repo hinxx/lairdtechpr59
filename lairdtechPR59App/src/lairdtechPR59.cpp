@@ -85,15 +85,15 @@ asynStatus LTPR59::serialPortWriteRead(double timeout) {
 	int eomReason;
 	asynStatus status;
 
-	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
-	hexdump(mReq, mReqSz);
+//	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
+//	hexdump(mReq, mReqSz);
 
 	status = pasynOctetSyncIO->writeRead(mAsynUserCommand,
 			mReq, mReqSz, mResp, mRespSz,
 			timeout, &mReqActSz, &mRespActSz, &eomReason);
 
-	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
-	hexdump(mResp, mRespActSz);
+//	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
+//	hexdump(mResp, mRespActSz);
 
 	if (status) {
 		asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
@@ -111,14 +111,14 @@ asynStatus LTPR59::serialPortWriteRead(double timeout) {
 asynStatus LTPR59::serialPortWrite(double timeout) {
 	asynStatus status;
 
-	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
-	hexdump(mReq, mReqSz);
+//	printf("%s: request (%ld bytes):\n", __func__, mReqSz);
+//	hexdump(mReq, mReqSz);
 
 	status = pasynOctetSyncIO->write(mAsynUserCommand,
 			mReq, mReqSz,
 			timeout, &mReqActSz);
 
-	printf("%s: request actual size %ld bytes\n", __func__, mReqActSz);
+//	printf("%s: request actual size %ld bytes\n", __func__, mReqActSz);
 	if (status) {
 		asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
 				"%s:%s, status=%d\n",
@@ -141,8 +141,8 @@ asynStatus LTPR59::serialPortRead(double timeout) {
 			timeout, &mRespActSz, &eomReason);
 
 
-	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
-	hexdump(mResp, mRespActSz);
+//	printf("%s: response (%ld bytes):\n", __func__, mRespActSz);
+//	hexdump(mResp, mRespActSz);
 
 	if (status) {
 		asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
@@ -159,7 +159,7 @@ asynStatus LTPR59::serialPortRead(double timeout) {
 
 void LTPR59::updateStatus(const char *msg) {
     memcpy(mStatusMsg, msg, strlen(msg));
-	printf("Status message: '%s'\n", mStatusMsg);
+//	printf("Status message: '%s'\n", mStatusMsg);
 	setStringParam(LTStatusMessage, mStatusMsg);
 
 	/* Do callbacks so higher layers see any changes */
@@ -433,7 +433,7 @@ void LTPR59::dataTask(void) {
 				n = sscanf(mResp, "[%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d]",
 					&iv[0], &iv[1], &iv[2],  &iv[3],  &iv[4],  &iv[5],  &iv[6],  &iv[7],
 					&iv[8], &iv[9], &iv[10], &iv[11], &iv[12], &iv[13], &iv[14], &iv[15], &iv[16]);
-				printf("%s: Parsed %d values..\n", __func__, n);
+//				printf("%s: Parsed %d values..\n", __func__, n);
 
 			} else if (contLog == 2) {
 				/* $A2
@@ -442,7 +442,7 @@ void LTPR59::dataTask(void) {
 				 */
 				n = sscanf(mResp, "[%d %X %X %d %f %f %f]",
 					&iv[0], &iv[1], &iv[2], &iv[3], &fv[0], &fv[1], &fv[2]);
-				printf("%s: Parsed %d values..\n", __func__, n);
+//				printf("%s: Parsed %d values..\n", __func__, n);
 
 			} else if (contLog == 3) {
 				/* $A3
@@ -452,11 +452,11 @@ void LTPR59::dataTask(void) {
 				n = sscanf(mResp, "[%d %X %X %f %f %f %f %f %f %f %f %f %f]",
 					&iv[0], &iv[1], &iv[2], &fv[0], &fv[1], &fv[2], &fv[3], &fv[4],
 					&fv[5], &fv[6], &fv[7], &fv[8], &fv[9]);
-				printf("%s: Parsed %d values..\n", __func__, n);
+//				printf("%s: Parsed %d values..\n", __func__, n);
 				if (n == 13) {
 					sprintf(buf, "%04X %04X", (iv[1] >> 16) & 0xFFFF, (iv[1] & 0xFFFF));
 					setStringParam(LTStatus, buf);
-					printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, (iv[1] >> 16) & 0xFFFF, (iv[1] & 0xFFFF));
+//					printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, (iv[1] >> 16) & 0xFFFF, (iv[1] & 0xFFFF));
 					setUIntDigitalParam(LTStatusAlarm, iv[1] >> 16, 0xFFFF);
 					setUIntDigitalParam(LTStatusError, iv[1], 0xFFFF);
 					setDoubleParam(LTTcOutput, fv[0]);
@@ -480,7 +480,7 @@ void LTPR59::dataTask(void) {
 				 */
 				n = sscanf(mResp, "[%d %X %X %f %f %d]",
 					&iv[0], &iv[1], &iv[2], &fv[0], &fv[1], &iv[3]);
-				printf("%s: Parsed %d values..\n", __func__, n);
+//				printf("%s: Parsed %d values..\n", __func__, n);
 
 			} else if (contLog == 5) {
 				/* $A5
@@ -489,7 +489,7 @@ void LTPR59::dataTask(void) {
 				 */
 				n = sscanf(mResp, "[%d %X %X %f %f %f]",
 					&iv[0], &iv[1], &iv[2], &fv[0], &fv[1], &fv[2]);
-				printf("%s: Parsed %d values..\n", __func__, n);
+//				printf("%s: Parsed %d values..\n", __func__, n);
 
 			} else if (contLog == 6) {
 				/* $A6
@@ -528,15 +528,15 @@ void LTPR59::dataTask(void) {
 					&fv[0], &fv[1], &fv[2], &fv[3], &fv[4], &fv[5], &fv[6], &fv[7],
 					&fv[8], &fv[9], &fv[10], &fv[11], &fv[12], &fv[13], &fv[14],
 					&fv[15], &fv[16], &fv[17]);
-				printf("%s: Parsed %d values..\n", __func__, n);
+//				printf("%s: Parsed %d values..\n", __func__, n);
 				if (n == 23) {
 					setIntegerParam(LTEventCounter, iv[1]);
 					sprintf(buf, "%04X %04X", (iv[2] >> 16) & 0xFFFF, (iv[2] & 0xFFFF));
 					setStringParam(LTStatus, buf);
-					printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, (iv[2] >> 16) & 0xFFFF, (iv[2] & 0xFFFF));
+//					printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, (iv[2] >> 16) & 0xFFFF, (iv[2] & 0xFFFF));
 					setUIntDigitalParam(LTStatusAlarm, iv[2] >> 16, 0xFFFF);
 					setUIntDigitalParam(LTStatusError, iv[2], 0xFFFF);
-					printf("%s::%s: regulator mode %d\n", driverName, __func__, iv[3]);
+//					printf("%s::%s: regulator mode %d\n", driverName, __func__, iv[3]);
 					setDoubleParam(LTTcOutput, fv[0]);
 					setDoubleParam(LTTemp1, fv[3]);
 					// skip temp2
@@ -589,7 +589,7 @@ asynStatus LTPR59::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 		return(status);
 	}
 
-	printf("%s: function %d, addr %d, value %d\n", __func__, function, addr, value);
+//	printf("%s: function %d, addr %d, value %d\n", __func__, function, addr, value);
 	status = setIntegerParam(addr, function, value);
 
 	if (function == LTLoggingMode) {
@@ -741,7 +741,7 @@ asynStatus LTPR59::readAllRegisterParams(void) {
 	if (n != 2) {
 		status = asynError;
 	} else {
-		printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, alarms, errors);
+//		printf("%s::%s: alarms 0x%X, errors 0x%X\n", driverName, __func__, alarms, errors);
 		sprintf(value, "%04X %04X", alarms, errors);
 		status = setStringParam(LTStatus, value);
 		status = setUIntDigitalParam(LTStatusAlarm, alarms, 0xFFFF);
@@ -918,7 +918,7 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 {
 	int status = asynSuccess;
 
-	printf("%s::%s: drvAsynSeriaPort '%s'\n", driverName, __func__, serialPort);
+//	printf("%s::%s: drvAsynSeriaPort '%s'\n", driverName, __func__, serialPort);
 
 	/* Create an EPICS exit handler */
 	epicsAtExit(exitHandler, this);
@@ -1007,7 +1007,7 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	createRegisterParam(114,	0x0, 	LTPIDTdString,				asynParamFloat64,		&LTPIDTd);
 	createRegisterParam(117,	0x0, 	LTPIDTLPaString,			asynParamFloat64,		&LTPIDTLPa);
 	createRegisterParam(118,	0x0, 	LTPIDTLPbString,			asynParamFloat64,		&LTPIDTLPb);
-	printf("%s::%s: Created %d registers..\n", driverName, __func__, mRegsIndex);
+//	printf("%s::%s: Created %d registers..\n", driverName, __func__, mRegsIndex);
 
 	setStringParam(LTStatusMessage,			"");
 	setStringParam(LTID,					"");
@@ -1031,8 +1031,7 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	/* stop continuous logging if in progress! */
 	status = controlLogging(false);
 	if (status) {
-		printf("%s:%s: device not present?\n",
-				driverName, __func__);
+		printf("%s:%s: device not present?\n", driverName, __func__);
 		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
@@ -1040,8 +1039,7 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 	/* Use this to signal the data acquisition task that acquisition has started. */
 	this->mDataEvent = epicsEventMustCreate(epicsEventEmpty);
 	if (!this->mDataEvent) {
-		printf("%s:%s epicsEventCreate failure for data event\n",
-				driverName, __func__);
+		printf("%s:%s epicsEventCreate failure for data event\n", driverName, __func__);
 		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
@@ -1052,8 +1050,7 @@ LTPR59::LTPR59(const char *portName, const char *serialPort)
 			epicsThreadGetStackSize(epicsThreadStackMedium),
 			(EPICSTHREADFUNC) taskC, this) == NULL);
 	if (status) {
-		printf("%s:%s: epicsThreadCreate failure for data task\n",
-				driverName, __func__);
+		printf("%s:%s: epicsThreadCreate failure for data task\n", driverName, __func__);
 		printf("%s:%s: init FAIL!\n", driverName, __func__);
 		return;
 	}
